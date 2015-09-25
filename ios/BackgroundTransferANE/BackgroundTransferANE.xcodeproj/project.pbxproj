@@ -43,7 +43,7 @@
 		5471FF3E190F1E0A0030D2E0 /* BackgroundTransferANE.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackgroundTransferANE.m; sourceTree = "<group>"; };
 		5471FF45190F1E0A0030D2E0 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		5471FF48190F1E0A0030D2E0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		5471FF5D190F1E730030D2E0 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashRuntimeExtensions.h; sourceTree = "<group>"; };
+		5471FF5D190F1E730030D2E0 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = ../../../../../../.gradle/gradleFx/sdks/0526c8c54013a500d162fe4f65b1e68aca011c8a/include/FlashRuntimeExtensions.h; sourceTree = "<group>"; };
 		54933CE11930D6F3006CCE7E /* NSString+ANE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ANE.h"; sourceTree = "<group>"; };
 		54933CE21930D6F3006CCE7E /* NSString+ANE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ANE.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */

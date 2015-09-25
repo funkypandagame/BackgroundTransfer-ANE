@@ -170,7 +170,17 @@ typedef void (^CompletionHandler)();
     static NSURLSession *session = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:sessionID];
+        
+        NSURLSessionConfiguration *sessionConfiguration;
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >=8.0f)
+        {
+            sessionConfiguration =[NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:sessionID];
+        }
+        else
+        {
+            sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfiguration:sessionID];
+        }
+        
         session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
     });
     
