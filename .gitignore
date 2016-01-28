@@ -1,20 +1,13 @@
-# Folders
-demo/out/
-demo/signing/
-temp/
-out/
-
-# Other files and folders
-.settings/
-
-# Intellij project files
-*.iws
-.idea
-*.iml
-
-# Xcode
-*xcuserdata
-*.a
-
-# Adobe Confidental
-FlashRuntimeExtensions.h
+backgroundTransfer-flash/target/*
+backgroundTransfer-flash/.idea/*
+backgroundTransfer-ios/target/*
+backgroundTransfer-ios/src/xcode/mobile-billing-ios.xcodeproj/xcuserdata/*
+backgroundTransfer-ios/src/xcode/mobile-billing-ios.xcodeproj/project.xcworkspace/*
+backgroundTransfer-ios/src/xcode/DerivedData/*
+backgroundTransfer-android/target/*
+backgroundTransfer-android/.idea/*
+testapp/target/*
+testapp/.gradle/*
+testapp/build/*
+testapp/.idea/*
+**.iml

@@ -1,0 +1,33 @@
+<extension xmlns="http://ns.adobe.com/air/extension/18.0">
+
+    <id>com.funkypanda.BackgroundTransfer</id>
+
+    <versionNumber>2.0.0</versionNumber>
+
+    <platforms>
+        <platform name="iPhone-ARM">
+            <applicationDeployment>
+                <nativeLibrary>libBackgroundTransfer.a</nativeLibrary>
+                <initializer>CLBackgroundTransferANEInitializer</initializer>
+                <finalizer>CLBackgroundTransferANEFinalizer</finalizer>
+
+            </applicationDeployment>
+        </platform>
+        <platform name="iPhone-x86">
+            <applicationDeployment>
+                <nativeLibrary>libBackgroundTransfer.a</nativeLibrary>
+                <initializer>CLBackgroundTransferANEInitializer</initializer>
+                <finalizer>CLBackgroundTransferANEFinalizer</finalizer>
+            </applicationDeployment>
+        </platform>
+        <platform name="Android-ARM">
+            <applicationDeployment>
+                <nativeLibrary>libBackgroundTransfer.jar</nativeLibrary>
+                <initializer>com.funkypanda.BackgroundTransfer.Extension</initializer>
+            </applicationDeployment>
+        </platform>
+        <platform name="default">
+            <applicationDeployment/>
+        </platform>
+    </platforms>
+</extension>

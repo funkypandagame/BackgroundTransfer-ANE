@@ -1,6 +1,6 @@
-#Background Transfer - Adobe AIR Native Extension for iOS
+#Background Transfer - Adobe AIR Native Extension for iOS + Android
 
-This [AIR Native Extension](http://www.adobe.com/devnet/air/native-extensions-for-air.html) provides AS3 API to use [iOS Background Transfer Service](http://www.appcoda.com/background-transfer-service-ios7/) for downloading files in Adobe AIR application.
+This [AIR Native Extension](http://www.adobe.com/devnet/air/native-extensions-for-air.html) provides AS3 API to use [iOS Background Transfer Service](http://www.appcoda.com/background-transfer-service-ios7/) or [Android DownloadManager](http://developer.android.com/reference/android/app/DownloadManager.html)for downloading files in Adobe AIR application.
 
 Starting from iOS7, with Background Transfer Service:
 
@@ -41,24 +41,18 @@ private function onBackgroundSessionInitialized(event:BTSessionInitializedEvent)
 
 Run the demo project for more implementation details.
 
-## Limitations
-
-Upload tasks are not supported and currently I'm not working on it. Pull requests are welcome :).
-There's no support for Android platform.
-
 ## Building
 
-Requirements – Adobe Air SDK 4.0 or later, Xcode, iOS SDK 7.0 or later
+Install Maven. Then run
 
-Add the `FlashRuntimeExtensions.h` file from the Adobe AIR SDK to the `ios/BackgroundTransferANE/BackgroundTransferANE` folder in the project.
-Update the `build/ant-build.config` file in the build folder to match your Adobe AIR SDK setup.
-Run the ant build script `ant-build.xml`. This will compile and package the ANE. Binary files will be saved into `bin/` folder.
+mvn clean install
 
-## Changelog
+To develop with the test app:
+1. run mvn clean install to compile the .ANE
+2. in IntelliJ's left pane right click on InAppPurchase.ane and select synchronize.
+3. run or debug it.
 
-### version 1.1
-- file can be downloaded to any possible location on iOS (instead of limiting the location to `Documents` folder);
-- updated background session setup to not use deprecated APIs;
+Check ANETest-app.xml that it uses the same name as the app certificate has.
 
 ##License
 
@@ -69,7 +63,7 @@ Default (not native) implementation of this ANE uses GreenSock LoaderMax for dow
 
 The MIT License (MIT)
 
-Copyright (c) 2014 Maciek Grzybowski
+Copyright (c) 2014 Maciek Grzybowski & project contributors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -88,3 +82,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
