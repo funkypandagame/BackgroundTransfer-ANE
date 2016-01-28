@@ -1,8 +1,8 @@
-package com.funkypanda.mobilebilling;
+package com.funkypanda.backgroundTransfer;
 
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
-import com.funkypanda.mobilebilling.functions.*;
+import com.funkypanda.backgroundTransfer.functions.*;
 
 import java.util.HashMap;
 import java.util.Map;

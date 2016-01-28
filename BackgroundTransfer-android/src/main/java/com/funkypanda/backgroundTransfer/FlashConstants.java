@@ -1,4 +1,4 @@
-package com.funkypanda.mobilebilling;
+package com.funkypanda.backgroundTransfer;
 
 
 public class FlashConstants {

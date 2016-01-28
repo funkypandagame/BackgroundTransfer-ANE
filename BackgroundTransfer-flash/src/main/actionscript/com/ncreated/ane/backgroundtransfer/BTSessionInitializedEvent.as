@@ -6,7 +6,7 @@ import flash.events.Event;
  */
 public class BTSessionInitializedEvent extends Event {
 
-    public static const INITIALIZED:String = "initialized"
+    public static const INITIALIZED:String = "initialized";
 
     public function BTSessionInitializedEvent(session_id:String, running_tasks:Array = null) {
         super(INITIALIZED, false, false);

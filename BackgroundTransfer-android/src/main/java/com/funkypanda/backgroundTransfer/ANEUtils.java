@@ -1,4 +1,4 @@
-package com.funkypanda.mobilebilling;
+package com.funkypanda.backgroundTransfer;
 
 import com.adobe.fre.FREArray;
 import com.adobe.fre.FREObject;

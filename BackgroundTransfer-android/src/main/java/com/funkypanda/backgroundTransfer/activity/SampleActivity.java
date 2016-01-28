@@ -1,4 +1,4 @@
-package com.funkypanda.mobilebilling.activity;
+package com.funkypanda.backgroundTransfer.activity;
 
 import android.app.Activity;
 import android.content.Intent;

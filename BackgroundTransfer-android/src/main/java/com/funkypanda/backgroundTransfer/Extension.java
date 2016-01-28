@@ -1,17 +1,18 @@
-package com.funkypanda.mobilebilling;
+package com.funkypanda.backgroundTransfer;
 
 import android.app.Activity;
 import android.util.Log;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREExtension;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class Extension implements FREExtension
 {
-    private static final String TAG = "AirInAppBilling";
+    private static final String TAG = "AirBackgroundTransfer";
 
     private static ExtensionContext context;
-
-    public static String base64EncodedKey;
 
     public static void dispatchStatusEventAsync(String eventCode, String message)
     {
@@ -50,5 +51,18 @@ public class Extension implements FREExtension
     {
         Log.d(TAG, message);
         context.dispatchStatusEventAsync(FlashConstants.DEBUG_LOG, message);
+    }
+
+    public static void logError(String taskId, String message)
+    {
+        String encodedMsg = "";
+        try {
+            encodedMsg = URLEncoder.encode(message, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            encodedMsg = "URLEncoder_Error";
+        }
+        encodedMsg = taskId + " " + encodedMsg;
+        Log.d(TAG, taskId + " " + message);
+        context.dispatchStatusEventAsync(FlashConstants.DOWNLOAD_TASK_ERROR, encodedMsg);
     }
 }

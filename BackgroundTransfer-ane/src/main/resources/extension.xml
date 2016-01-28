@@ -1,6 +1,6 @@
 <extension xmlns="http://ns.adobe.com/air/extension/18.0">
 
-    <id>com.funkypanda.BackgroundTransfer</id>
+    <id>com.funkypanda.backgroundTransfer</id>
 
     <versionNumber>2.0.0</versionNumber>
 
@@ -23,7 +23,7 @@
         <platform name="Android-ARM">
             <applicationDeployment>
                 <nativeLibrary>libBackgroundTransfer.jar</nativeLibrary>
-                <initializer>com.funkypanda.BackgroundTransfer.Extension</initializer>
+                <initializer>com.funkypanda.backgroundTransfer.Extension</initializer>
             </applicationDeployment>
         </platform>
         <platform name="default">

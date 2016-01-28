@@ -92,7 +92,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>BackgroundTransfer.ane</finalName>
+                    <finalName>backgroundTransfer.ane</finalName>
                     <versionNumber>${project.version}</versionNumber>
                     <versionLabel>${project.version}</versionLabel>
                     <pluginHome>${user.home}/.adt</pluginHome>

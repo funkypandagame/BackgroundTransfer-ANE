@@ -39,7 +39,7 @@
                     <uses-permission android:name="android.permission.INTERNET" />
 
                     <application>
-                        <activity android:name="com.funkypanda.mobilebilling.activity.SampleActivity"
+                        <activity android:name="com.funkypanda.backgroundTransfer.activity.SampleActivity"
                         android:label=""
                         android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
                     </application>
@@ -64,6 +64,6 @@
     </iPhone>
 
     <extensions>
-        <extensionID>com.ncreated.BackgroundTransfer</extensionID>
+        <extensionID>com.funkypanda.backgroundTransfer</extensionID>
     </extensions>
 </application>

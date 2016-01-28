@@ -1,5 +1,6 @@
 package com.ncreated.ane.backgroundtransfer {
 
+import flash.events.ErrorEvent;
 import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
@@ -7,7 +8,7 @@ import flash.utils.Dictionary;
 
 public class BackgroundTransfer extends EventDispatcher {
 
-    private static const EXTENSION_ID:String = "com.funkypanda.BackgroundTransfer";
+    private static const EXTENSION_ID:String = "com.funkypanda.backgroundTransfer";
 
     private static var _instance:BackgroundTransfer;
 
@@ -127,6 +128,9 @@ public class BackgroundTransfer extends EventDispatcher {
         if (task) {
             task.dispatchError(error);
         }
+        else {
+            dispatchEvent(new ErrorEvent(ErrorEvent.ERROR, false, false, "Download task error " + task_id + " " + error));
+        }
     }
 
     private function onStatusEvent(event:StatusEvent):void {
@@ -158,6 +162,7 @@ public class BackgroundTransfer extends EventDispatcher {
             }
             case BTInternalMessages.DOWNLOAD_TASK_ERROR:
             {
+                // event.code looks like "taskId urlEncodedStuff anotherUrlEncodedStuff"
                 data = event.code.split(" ");
                 taskID = unescape(data.shift());
                 var error:String = data.join(" ");

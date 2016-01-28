@@ -1,3 +1,12 @@
+/*
+ Testing application for the ANE.
+ Usage:
+  (OSX only) make gradlew executable
+  add mavenUsername, mavenPassword, repoManagerURL properties to your gradle.properties file
+  run gradlew packageMobile to create a test .ipa for iOS
+  run gradlew installMobile to create and install the .ipa on a connected device.
+  run gradlew idea to create IntelliJ IDEA project files.
+ */
 import org.apache.tools.ant.taskdefs.condition.Os
 
 buildscript {
@@ -24,11 +33,11 @@ type = 'mobile'
 version = '0.1'
 
 mainClass = 'Main.as'
-playerVersion = '19.0'
+playerVersion = '18.0'
 output = 'TestApp'
 
 def compilerOptions = [
-    '-swf-version=18', // AIR 19
+    '-swf-version=18',
     '-advanced-telemetry',
     // AS3 metadata
     '-keep-as3-metadata+=Inline,Embed,SWF,Transient',
