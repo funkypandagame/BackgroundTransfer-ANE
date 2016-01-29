@@ -1,6 +1,5 @@
 package com.ncreated.ane.backgroundtransfer {
 
-import flash.events.ErrorEvent;
 import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
@@ -129,7 +128,7 @@ public class BackgroundTransfer extends EventDispatcher {
             task.dispatchError(error);
         }
         else {
-            dispatchEvent(new ErrorEvent(ErrorEvent.ERROR, false, false, "Download task error " + task_id + " " + error));
+            dispatchEvent(new BTErrorEvent("Download task error taskId: " + task_id + " message: " + error));
         }
     }
 
@@ -167,6 +166,21 @@ public class BackgroundTransfer extends EventDispatcher {
                 taskID = unescape(data.shift());
                 var error:String = data.join(" ");
                 onDownloadTaskError(taskID, error);
+                break;
+            }
+            case BTInternalMessages.DEBUG_LOG:
+            {
+                dispatchEvent(new BTDebugEvent(event.code));
+                break;
+            }
+            case BTInternalMessages.ERROR:
+            {
+                dispatchEvent(new BTErrorEvent(event.code));
+                break;
+            }
+            default:
+            {
+                dispatchEvent(new BTErrorEvent("Unknown event '" + event.level + "' message:" + event.code));
                 break;
             }
         }

@@ -5,9 +5,6 @@ import android.util.Log;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREExtension;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 public class Extension implements FREExtension
 {
     private static final String TAG = "AirBackgroundTransfer";
@@ -19,11 +16,11 @@ public class Extension implements FREExtension
         if (context != null)
         {
             log(eventCode + " " + message);
-            context.dispatchStatusEventAsync(eventCode, message);
+            context.dispatchStatusEventAsync(message, eventCode);
         }
         else
         {
-            Log.e(TAG, "ERROR: Extension context is null, was the extension disposed? Tried to send event " +
+            Log.e(TAG, "Extension context is null, was the extension disposed? Tried to send event " +
                  eventCode + " with message " + message);
         }
     }
@@ -50,11 +47,15 @@ public class Extension implements FREExtension
     public static void log(String message)
     {
         Log.d(TAG, message);
-        context.dispatchStatusEventAsync(FlashConstants.DEBUG_LOG, message);
+        context.dispatchStatusEventAsync(message, FlashConstants.DEBUG_LOG);
     }
 
-    public static void logError(String taskId, String message)
+    public static void logError(String message)
     {
+        Log.e(TAG, message);
+        context.dispatchStatusEventAsync(message, FlashConstants.ERROR);
+        /*
+        this code goes to download task error
         String encodedMsg = "";
         try {
             encodedMsg = URLEncoder.encode(message, "utf-8");
@@ -62,7 +63,8 @@ public class Extension implements FREExtension
             encodedMsg = "URLEncoder_Error";
         }
         encodedMsg = taskId + " " + encodedMsg;
-        Log.d(TAG, taskId + " " + message);
-        context.dispatchStatusEventAsync(FlashConstants.DOWNLOAD_TASK_ERROR, encodedMsg);
+        Log.e(TAG, taskId + " " + message);
+        context.dispatchStatusEventAsync(encodedMsg, FlashConstants.DOWNLOAD_TASK_ERROR);
+        */
     }
 }

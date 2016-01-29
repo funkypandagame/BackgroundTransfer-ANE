@@ -9,7 +9,7 @@
     <initialWindow>
         <content>TestApp.swf</content>
         <visible>true</visible>
-        <aspectRatio>landscape</aspectRatio>
+        <aspectRatio>any</aspectRatio>
         <autoOrients>true</autoOrients>
         <fullScreen>true</fullScreen>
         <renderMode>direct</renderMode>

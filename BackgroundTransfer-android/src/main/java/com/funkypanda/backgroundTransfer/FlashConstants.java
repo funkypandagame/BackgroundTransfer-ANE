@@ -9,6 +9,7 @@ public class FlashConstants {
     final public static String DOWNLOAD_TASK_COMPLETED = "download task completed";
     final public static String DOWNLOAD_TASK_ERROR = "download task error";
     final public static String DEBUG_LOG = "debug log";
+    final public static String ERROR = "bt error";
 
     // function names
     final public static String initializeSession = "BGT_initializeSession";
