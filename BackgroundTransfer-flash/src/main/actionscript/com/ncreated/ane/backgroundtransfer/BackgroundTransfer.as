@@ -37,8 +37,15 @@ public class BackgroundTransfer extends EventDispatcher {
     private var _initializedSessions:Array;
 
     public function initializeSession(session_id:String):void {
+        if (session_id.indexOf(" ") > -1) {
+            throw new Error("Session ID cannot contain spaces");
+        }
         if (_extensionContext && !isSessionInitialized(session_id)) {
             _extensionContext.call(BTNativeMethods.initializeSession, session_id);
+        }
+        else {
+            var errMsg : String = _extensionContext == null ? "ANE context creation failed" : "Session already initialized";
+            dispatchEvent(new BTErrorEvent(errMsg));
         }
     }
 
@@ -68,12 +75,14 @@ public class BackgroundTransfer extends EventDispatcher {
         return _initializedSessions.indexOf(session_id) >= 0;
     }
 
+    // does NOT work on Android!
     internal function resumeDownloadTask(task:BTDownloadTask):void {
         if (_extensionContext && isSessionInitialized(task.sessionID)) {
             _extensionContext.call(BTNativeMethods.resumeDownloadTask, task.taskID);
         }
     }
 
+    // does NOT work on Android!
     internal function suspendDownloadTask(task:BTDownloadTask):void {
         if (_extensionContext && isSessionInitialized(task.sessionID)) {
             _extensionContext.call(BTNativeMethods.suspendDownloadTask, task.taskID);

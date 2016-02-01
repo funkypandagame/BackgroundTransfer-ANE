@@ -19,13 +19,13 @@ public class ExtensionContext extends FREContext
     {
         Map<String, FREFunction> functionMap = new HashMap<String, FREFunction>();
 
-        functionMap.put(FlashConstants.initializeSession, new CreateDownloadTaskFunction());
+        functionMap.put(FlashConstants.initializeSession, new InitializeSessionFunction());
         functionMap.put(FlashConstants.createDownloadTask, new CreateDownloadTaskFunction());
-        functionMap.put(FlashConstants.getDownloadTaskPropertiesArray, new CreateDownloadTaskFunction());
-        functionMap.put(FlashConstants.resumeDownloadTask, new CreateDownloadTaskFunction());
-        functionMap.put(FlashConstants.suspendDownloadTask, new CreateDownloadTaskFunction());
-        functionMap.put(FlashConstants.cancelDownloadTask, new CreateDownloadTaskFunction());
-        functionMap.put(FlashConstants.crashTheAppTask, new CreateDownloadTaskFunction());
+        functionMap.put(FlashConstants.getDownloadTaskPropertiesArray, new GetDownloadTaskPropertiesFunction());
+        functionMap.put(FlashConstants.resumeDownloadTask, new TempFunction());
+        functionMap.put(FlashConstants.suspendDownloadTask, new TempFunction());
+        functionMap.put(FlashConstants.cancelDownloadTask, new CancelDownloadTaskFunction());
+        functionMap.put(FlashConstants.crashTheAppTask, new TempFunction());
 
         return functionMap;
     }

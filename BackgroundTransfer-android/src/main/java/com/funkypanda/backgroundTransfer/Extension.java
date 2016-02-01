@@ -4,22 +4,25 @@ import android.app.Activity;
 import android.util.Log;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREExtension;
+import com.thin.downloadmanager.ThinDownloadManager;
 
 public class Extension implements FREExtension
 {
     private static final String TAG = "AirBackgroundTransfer";
 
+    public static String sessionId;
+
     private static ExtensionContext context;
+
+    public static ThinDownloadManager downloadManager;
 
     public static void dispatchStatusEventAsync(String eventCode, String message)
     {
-        if (context != null)
-        {
-            log(eventCode + " " + message);
+        if (context != null) {
+            Log.d(TAG, message + " " + eventCode);
             context.dispatchStatusEventAsync(message, eventCode);
         }
-        else
-        {
+        else {
             Log.e(TAG, "Extension context is null, was the extension disposed? Tried to send event " +
                  eventCode + " with message " + message);
         }
@@ -38,11 +41,16 @@ public class Extension implements FREExtension
 
     public void dispose()
     {
+        if (downloadManager != null) {
+            downloadManager.release();
+        }
         // after calling this dispose() the library will not be usable!
         context = null;
     }
 
-    public void initialize() {}
+    public void initialize() {
+        downloadManager = new ThinDownloadManager();
+    }
 
     public static void log(String message)
     {
@@ -54,17 +62,5 @@ public class Extension implements FREExtension
     {
         Log.e(TAG, message);
         context.dispatchStatusEventAsync(message, FlashConstants.ERROR);
-        /*
-        this code goes to download task error
-        String encodedMsg = "";
-        try {
-            encodedMsg = URLEncoder.encode(message, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            encodedMsg = "URLEncoder_Error";
-        }
-        encodedMsg = taskId + " " + encodedMsg;
-        Log.e(TAG, taskId + " " + message);
-        context.dispatchStatusEventAsync(encodedMsg, FlashConstants.DOWNLOAD_TASK_ERROR);
-        */
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <application xmlns="http://ns.adobe.com/air/application/18.0">
 
-    <id>com.funkypandagame.dowwnloader</id>
+    <id>com.funkypandagame.downloaderTest</id>
     <filename>Downloader Test</filename>
     <name>Downloader Test</name>
     <versionNumber>999</versionNumber>
@@ -11,7 +11,7 @@
         <visible>true</visible>
         <aspectRatio>any</aspectRatio>
         <autoOrients>true</autoOrients>
-        <fullScreen>true</fullScreen>
+        <fullScreen>false</fullScreen>
         <renderMode>direct</renderMode>
         <depthAndStencil>true</depthAndStencil>
     </initialWindow>

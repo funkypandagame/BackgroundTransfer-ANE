@@ -67,7 +67,7 @@ dependencies {
     flexSDK group: 'com.feathersui', name: 'feathers-sdk', version: '2.3.0', ext: Os.isFamily(Os.FAMILY_WINDOWS) ? 'zip' : 'tar.gz'
     merged group: 'com.feathersui', name: 'MetalWorksMobileTheme', version: '2016-01-08', ext: 'swc'
 
-    merged group: 'com.funkypanda', name: 'mobile-billing', version: '2015-11-17', ext: 'ane'
+    merged group: 'com.funkypanda', name: 'backgroundTransfer', version: '2016-02-01', ext: 'ane'
 }
 
 additionalCompilerOptions = compilerOptions

@@ -1,10 +1,10 @@
 package
 {
 
-import com.ncreated.ane.backgroundtransfer.BTDebugEvent;
-import com.ncreated.ane.backgroundtransfer.BTDownloadTask;
-import com.ncreated.ane.backgroundtransfer.BTErrorEvent;
-import com.ncreated.ane.backgroundtransfer.BTSessionInitializedEvent;
+    import com.ncreated.ane.backgroundtransfer.BTDebugEvent;
+    import com.ncreated.ane.backgroundtransfer.BTDownloadTask;
+    import com.ncreated.ane.backgroundtransfer.BTErrorEvent;
+    import com.ncreated.ane.backgroundtransfer.BTSessionInitializedEvent;
     import com.ncreated.ane.backgroundtransfer.BackgroundTransfer;
 
     import feathers.controls.Button;
@@ -13,15 +13,18 @@ import com.ncreated.ane.backgroundtransfer.BTSessionInitializedEvent;
     import feathers.layout.TiledColumnsLayout;
     import feathers.themes.MetalWorksMobileTheme;
 
-import flash.events.ErrorEvent;
+    import flash.desktop.NativeApplication;
 
-import flash.events.ProgressEvent;
+    import flash.events.ErrorEvent;
 
-import flash.events.UncaughtErrorEvent;
+    import flash.events.ProgressEvent;
+    import flash.filesystem.File;
+
     import flash.system.Capabilities;
+    import flash.system.System;
 
     import flash.text.TextFormat;
-
+    import flash.utils.getTimer;
 
     import starling.display.Sprite;
     import starling.events.Event;
@@ -38,10 +41,20 @@ import flash.events.UncaughtErrorEvent;
         private var currentTask : BTDownloadTask;
         private static const SESSION_ID : String = "SESSION_ID";
 
+        private var lastProgressDisplayed : Number = 0;
+
         public function TestApp()
         {
             _instance = this;
             addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+            NativeApplication.nativeApplication.executeInBackground = false;
+
+            NativeApplication.nativeApplication.addEventListener(flash.events.Event.ACTIVATE, function(e : flash.events.Event) : void {
+                System.resume();
+            });
+            NativeApplication.nativeApplication.addEventListener(flash.events.Event.DEACTIVATE, function(e : flash.events.Event) : void {
+                System.pause();
+            });
         }
 
         protected function addedToStageHandler(event : Event) : void
@@ -83,26 +96,69 @@ import flash.events.UncaughtErrorEvent;
 
             button = new Button();
             button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
-                currentTask = service.createDownloadTask(SESSION_ID, "www.vaadg34qgf.sdf", ".");
+                var currentTask : BTDownloadTask = service.createDownloadTask(SESSION_ID, "http://www.google.com/sdfgsdsdf",
+                                        File.applicationStorageDirectory.nativePath + "/dsfsdf.zip");
                 if (currentTask) {
-                    currentTask.addEventListener(ProgressEvent.PROGRESS, function(evt:ProgressEvent):void {
-                    });
+                    currentTask.addEventListener(ProgressEvent.PROGRESS, logDownloadProgress);
                     currentTask.addEventListener(flash.events.Event.COMPLETE, function(evt:flash.events.Event):void {
-                        log("Download task complete");
+                        log("DownloadTaskComplete");
                     });
                     currentTask.addEventListener(ErrorEvent.ERROR, function(evt:ErrorEvent):void {
-                        log("Download task error " + evt.text + " " + evt.errorID);
+                        log("DownloadTaskError " + evt.text + " " + evt.errorID);
                     });
                 }
                 else {
                     log("Failed to create download task!")
                 }
             });
-            button.label = "create download task";
+            button.label = "download wrong URL";
             button.validate();
             container.addChild(button);
 
-            buttonBarHeight = Math.ceil(0.5 * container.numChildren) * 55 + 5;
+            button = new Button();
+            button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
+                currentTask = service.createDownloadTask(SESSION_ID, "https://s3.amazonaws.com/rinoa-mountain/artAssets/master-720/full/PC_SD.zip",
+                                        File.applicationStorageDirectory.nativePath + "/dsfsdf.zip");
+                if (currentTask) {
+                    currentTask.addEventListener(ProgressEvent.PROGRESS, logDownloadProgress);
+                    currentTask.addEventListener(flash.events.Event.COMPLETE, function(evt:flash.events.Event):void {
+                        log("DownloadTaskComplete");
+                    });
+                    currentTask.addEventListener(ErrorEvent.ERROR, function(evt:ErrorEvent):void {
+                        log("DownloadTaskError " + evt.text + " " + evt.errorID);
+                    });
+                }
+                else {
+                    log("Failed to create download task!")
+                }
+            });
+            button.label = "download good URL";
+            button.validate();
+            container.addChild(button);
+
+            button = new Button();
+            button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
+                if (currentTask) {
+                    currentTask.cancel();
+                }
+                else {
+                    log("No current download!")
+                }
+            });
+            button.label = "cancel good URL";
+            button.validate();
+            container.addChild(button);
+
+
+            button = new Button();
+            button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
+                logTF.text = "";
+            });
+            button.label = "clear";
+            button.validate();
+            container.addChild(button);
+
+            buttonBarHeight = Math.ceil(0.5 * container.numChildren) * 60 + 5;
             container.height = buttonBarHeight;
             logTF.height = stage.stageHeight - buttonBarHeight;
             logTF.y = buttonBarHeight;
@@ -130,6 +186,14 @@ import flash.events.UncaughtErrorEvent;
             {
                 log("ERROR " + evt.message);
             });
+        }
+
+        private function logDownloadProgress(evt : ProgressEvent) : void
+        {
+            if (getTimer() - lastProgressDisplayed > 1000) {
+                lastProgressDisplayed = getTimer();
+                log("OnProgress " + (evt.bytesTotal/1024/1024).toFixed(2) + "/" + (evt.bytesLoaded/1024/1024).toFixed(2) + " MB");
+            }
         }
 
         public function log(str : String) : void

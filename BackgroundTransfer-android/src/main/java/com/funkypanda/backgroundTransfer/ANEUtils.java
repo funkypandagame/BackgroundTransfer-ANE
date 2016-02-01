@@ -1,8 +1,9 @@
 package com.funkypanda.backgroundTransfer;
 
-import com.adobe.fre.FREArray;
-import com.adobe.fre.FREObject;
+import com.adobe.fre.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,5 +60,39 @@ public class ANEUtils {
         }
 
         return result;
+    }
+
+    public static FREArray stringArrayToFREArray(String[] toConvert)
+    {
+        FREArray asVector = null;
+        try {
+            asVector = FREArray.newArray("String", toConvert.length, false);
+            for (int i = 0; i < toConvert.length; i++) {
+                FREObject stringElement = FREObject.newObject(toConvert[i]);
+                asVector.setObjectAt(i, stringElement);
+            }
+        } catch (FREASErrorException e) {
+            e.printStackTrace();
+        } catch (FRENoSuchNameException e) {
+            e.printStackTrace();
+        } catch (FREWrongThreadException e) {
+            e.printStackTrace();
+        } catch (FREInvalidObjectException e) {
+            e.printStackTrace();
+        } catch (FRETypeMismatchException e) {
+            e.printStackTrace();
+        }
+        return asVector;
+    }
+
+    public static String encodeString(String toEncode)
+    {
+        String toReturn = "";
+        try {
+            toReturn = URLEncoder.encode(toEncode, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return toReturn;
     }
 }
