@@ -1,6 +1,6 @@
 #Background Transfer - Adobe AIR Native Extension for iOS + Android
 
-This [AIR Native Extension](http://www.adobe.com/devnet/air/native-extensions-for-air.html) provides AS3 API to use [iOS Background Transfer Service](http://www.appcoda.com/background-transfer-service-ios7/) or [Android DownloadManager](http://developer.android.com/reference/android/app/DownloadManager.html)for downloading files in Adobe AIR application.
+This [AIR Native Extension](http://www.adobe.com/devnet/air/native-extensions-for-air.html) provides AS3 API to use [iOS Background Transfer Service](http://www.appcoda.com/background-transfer-service-ios7/) and an Android download manager for downloading files in Adobe AIR application.
 
 Starting from iOS7, with Background Transfer Service:
 
@@ -11,6 +11,9 @@ Starting from iOS7, with Background Transfer Service:
 
 Read more about NSURLSession in Apple documentation: [https://developer.apple.com/library/IOs/documentation/Foundation/Reference/NSURLSession_class/index.html]()
 Read more about multitasking in iOS: [NSURLSession and Background Transfer Service](http://www.objc.io/issue-5/multitasking.html)
+
+On Android it uses a multi-threaded download library, [ThinDownloadManager](https://github.com/smanikandan14/ThinDownloadManager)
+
 
 ## Usage
 
@@ -53,6 +56,9 @@ To develop with the test app:
 3. run or debug it.
 
 Check ANETest-app.xml that it uses the same name as the app certificate has.
+
+Note: Android has no session handling, so onBackgroundSessionInitialized will always return nothing. Also you downloads will fail it the connectivity changes.
+
 
 ##License
 

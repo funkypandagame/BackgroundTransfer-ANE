@@ -43,6 +43,7 @@ public class Extension implements FREExtension
     {
         if (downloadManager != null) {
             downloadManager.release();
+            downloadManager = null;
         }
         // after calling this dispose() the library will not be usable!
         context = null;

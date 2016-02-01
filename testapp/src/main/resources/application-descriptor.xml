@@ -37,13 +37,9 @@
             <![CDATA[
 				<manifest android:installLocation="auto">
                     <uses-permission android:name="android.permission.INTERNET" />
-
-                    <application>
-                        <activity android:name="com.funkypanda.backgroundTransfer.activity.SampleActivity"
-                        android:label=""
-                        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
-                    </application>
-            </manifest>
+                    <!-- This permission is only needed if you want to save files to the SD card -->
+                    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+                </manifest>
 			]]>
         </manifestAdditions>
     </android>
