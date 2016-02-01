@@ -368,12 +368,6 @@ import flash.display.*;
         public var _stringSubstitutions : Object;
         /** @private */
         public static var _typeClasses : Object = {
-            image: ImageItem,
-            movieclip: ImageItem,
-            xml: XMLItem,
-            video: VideoItem,
-            sound: SoundItem,
-            text: URLItem,
             binary: BinaryItem
         };
 
@@ -1364,45 +1358,6 @@ import flash.display.*;
      */
     public function getBitmap(key : String, clearMemory : Boolean = false) : Bitmap{
         return Bitmap(_getContentAsType(key, Bitmap, clearMemory));
-    }
-
-    /** Returns a Loader object with the downloaded asset for the given key.
-     * Had to pick this ugly name since <code>getLoader</code> is currently used for getting a BulkLoader instance.
-     * This is useful if you are loading images but do not have a crossdomain to grant you permissions. In this case, while you
-     * will still find restrictions to how you can use that loaded asset (no BitmapData for it, for example), you still can use it as content.
-     *
-     *   @param key The url request, url as a string or a id  from which the asset was loaded. Returns null if the cast fails
-     *   @param clearMemory If this <code>BulkProgressEvent</code> instance should clear all references to the content of this asset.
-     *   @return The content retrived from that url casted to a Loader object. Returns null if the cast fails.
-     */
-    public function getDisplayObjectLoader(key : String, clearMemory : Boolean = false) : Loader{
-        if(!_name){
-            throw new Error("[BulkLoader] Cannot use an instance that has been cleared from memory (.clear())");
-        }
-        var item : ImageItem = get(key) as ImageItem;
-        if(!item){
-            return null;
-        }
-        try{
-            var res : Loader = item.loader as Loader;
-            if (!res){
-                throw new Error("bad cast");
-            }
-            if(clearMemory){
-                remove(key);
-                // this needs to try to load a next item, because this might get called inside a
-                // complete handler and if it's on the last item on the open connections, it might stale
-                if (!_isPaused){
-                    _loadNext();
-                }
-            }
-            return res;
-        }catch(e : Error){
-            log("Failed to get content with url: '"+ key + "'as type: Loader", LOG_ERRORS);
-        }
-
-        return null;
-
     }
 
     /** Returns a <code>MovieClip</code> object with the downloaded asset for the given key.

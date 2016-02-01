@@ -36,7 +36,7 @@ package br.com.stimuli.loadingANE.loadingtypes {
                 onSecurityErrorHandler(_createErrorEvent(e));
 
             }
-        };
+        }
 
         override public function onErrorHandler(evt : ErrorEvent) : void {
             super.onErrorHandler(evt);
@@ -44,13 +44,13 @@ package br.com.stimuli.loadingANE.loadingtypes {
 
         override public function onStartedHandler(evt : Event) : void{
             super.onStartedHandler(evt);
-        };
+        }
 
         override public function onCompleteHandler(evt : Event) : void {
             // _content = new ByteArray(loader.data);
             _content = evt.target.data;
             super.onCompleteHandler(evt);
-        };
+        }
 
         override public function stop() : void{
             try{
@@ -61,7 +61,7 @@ package br.com.stimuli.loadingANE.loadingtypes {
 
             }
             super.stop();
-        };
+        }
 
         override public function cleanListeners() : void {
             if(loader){
