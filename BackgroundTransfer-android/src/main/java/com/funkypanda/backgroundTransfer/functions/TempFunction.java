@@ -11,8 +11,7 @@ public class TempFunction implements FREFunction
     @Override
     public FREObject call(FREContext ctx, FREObject[] args)
     {
-        Extension.log("Called tempFunction with " + args.length + " args");
-
+        Extension.log("Function not supported on Android :/");
         return null;
     }
 

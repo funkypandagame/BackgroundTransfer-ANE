@@ -13,8 +13,7 @@ public class CancelDownloadTaskFunction implements FREFunction
     @Override
     public FREArray call(FREContext ctx, FREObject[] args)
     {
-        if (args.length != 1)
-        {
+        if (args.length != 1) {
             Extension.logError("CancelDownloadTaskFunction: Called with " + args.length + " args, needs 1");
             return null;
         }
@@ -31,7 +30,6 @@ public class CancelDownloadTaskFunction implements FREFunction
         if (result == 0) {
             Extension.logError("Failed to cancel download with URL " + taskURL);
         }
-
         return null;
     }
 

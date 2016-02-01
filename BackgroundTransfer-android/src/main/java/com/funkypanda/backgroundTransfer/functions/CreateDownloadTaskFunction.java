@@ -16,8 +16,7 @@ public class CreateDownloadTaskFunction implements FREFunction
     @Override
     public FREObject call(FREContext ctx, FREObject[] args)
     {
-        if (args.length != 3)
-        {
+        if (args.length != 3) {
             Extension.logError("CreateDownloadTask: Called with " + args.length + " args, needs 3");
             return null;
         }
@@ -56,7 +55,7 @@ public class CreateDownloadTaskFunction implements FREFunction
 
                     @Override
                     public void onProgress(int id, long totalBytes, long downloadedBytes, int progress) {
-                        String toReturn = getTaskId() + " " + totalBytes + " " + downloadedBytes;
+                        String toReturn = getTaskId() + " " + downloadedBytes + " " + totalBytes;
                         Extension.dispatchStatusEventAsync(FlashConstants.DOWNLOAD_TASK_PROGRESS, toReturn);
                     }
 

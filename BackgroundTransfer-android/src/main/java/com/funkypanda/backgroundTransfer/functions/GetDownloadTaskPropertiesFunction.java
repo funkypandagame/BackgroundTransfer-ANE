@@ -6,7 +6,8 @@ import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 import com.funkypanda.backgroundTransfer.Extension;
 
-// The Android implementation does nothing since it cant keep downloads between sessions
+// In the iOS implementation this is called based on what the initialize function returns.
+// The Android implementation does nothing since it cant keep downloads between sessions.
 public class GetDownloadTaskPropertiesFunction implements FREFunction
 {
 

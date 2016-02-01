@@ -13,15 +13,12 @@ package
     import feathers.layout.TiledColumnsLayout;
     import feathers.themes.MetalWorksMobileTheme;
 
-    import flash.desktop.NativeApplication;
-
     import flash.events.ErrorEvent;
 
     import flash.events.ProgressEvent;
     import flash.filesystem.File;
 
     import flash.system.Capabilities;
-    import flash.system.System;
 
     import flash.text.TextFormat;
     import flash.utils.getTimer;
@@ -47,14 +44,6 @@ package
         {
             _instance = this;
             addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
-            NativeApplication.nativeApplication.executeInBackground = false;
-
-            NativeApplication.nativeApplication.addEventListener(flash.events.Event.ACTIVATE, function(e : flash.events.Event) : void {
-                System.resume();
-            });
-            NativeApplication.nativeApplication.addEventListener(flash.events.Event.DEACTIVATE, function(e : flash.events.Event) : void {
-                System.pause();
-            });
         }
 
         protected function addedToStageHandler(event : Event) : void
@@ -149,7 +138,6 @@ package
             button.validate();
             container.addChild(button);
 
-
             button = new Button();
             button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
                 logTF.text = "";
@@ -168,31 +156,27 @@ package
             try {
                 service = BackgroundTransfer.instance;
             }
-            catch (err : Error)
-            {
+            catch (err : Error) {
                 log("Cannot create BackgroundTransfer " + err + "\n" + err.getStackTrace());
                 return;
             }
 
-            service.addEventListener(BTSessionInitializedEvent.INITIALIZED, function (evt : BTSessionInitializedEvent) : void
-            {
+            service.addEventListener(BTSessionInitializedEvent.INITIALIZED, function (evt : BTSessionInitializedEvent) : void {
                 log("initialized " + evt.type + " " + evt.runningTasks + " " + evt.sessionID);
             });
-            service.addEventListener(BTDebugEvent.TYPE, function (evt : BTDebugEvent) : void
-            {
+            service.addEventListener(BTDebugEvent.TYPE, function (evt : BTDebugEvent) : void {
                 log("DEBUG " + evt.message);
             });
-            service.addEventListener(BTErrorEvent.TYPE, function (evt : BTErrorEvent) : void
-            {
+            service.addEventListener(BTErrorEvent.TYPE, function (evt : BTErrorEvent) : void {
                 log("ERROR " + evt.message);
             });
         }
 
         private function logDownloadProgress(evt : ProgressEvent) : void
         {
-            if (getTimer() - lastProgressDisplayed > 1000) {
+            if (getTimer() - lastProgressDisplayed > 1000) {// to prevent message spam
                 lastProgressDisplayed = getTimer();
-                log("OnProgress " + (evt.bytesTotal/1024/1024).toFixed(2) + "/" + (evt.bytesLoaded/1024/1024).toFixed(2) + " MB");
+                log("OnProgress " +  (evt.bytesLoaded/1024/1024).toFixed(2) + "/" + (evt.bytesTotal/1024/1024).toFixed(2) + " MB");
             }
         }
 
@@ -204,12 +188,10 @@ package
 
         public static function log(str: String) : void
         {
-            if (_instance)
-            {
+            if (_instance) {
                 _instance.log(str);
             }
-            else
-            {
+            else {
                 trace(str);
             }
         }

@@ -3,13 +3,16 @@ package com.ncreated.ane.backgroundtransfer {
 import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
+import flash.system.Capabilities;
 import flash.utils.Dictionary;
 
 public class BackgroundTransfer extends EventDispatcher {
 
     private static const EXTENSION_ID:String = "com.funkypanda.backgroundTransfer";
-
     private static var _instance:BackgroundTransfer;
+    private var _extensionContext:Object;
+    private var _downloadTasks:Dictionary;
+    private var _initializedSessions:Array;
 
     public static function get instance():BackgroundTransfer {
         if (!_instance) {
@@ -20,21 +23,22 @@ public class BackgroundTransfer extends EventDispatcher {
 
     public function BackgroundTransfer() {
         if (!_extensionContext) {
-            try {
-                _extensionContext = ExtensionContext.createExtensionContext(EXTENSION_ID, null);
+            if (Capabilities.manufacturer.indexOf("iOS") > -1 || Capabilities.manufacturer.indexOf("Android") > -1) {
+                try {
+                    _extensionContext = ExtensionContext.createExtensionContext(EXTENSION_ID, null);
+                }
+                catch (e:Error) {
+                    trace("BackgroundTransfer ANE context creation failed.");
+                }
             }
-            catch (e:Error) {
-                trace("BackgroundTransfer ANE context creation failed.");
+            else {
+                _extensionContext = new DefaultImplementation();
             }
             _extensionContext.addEventListener(StatusEvent.STATUS, onStatusEvent);
             _downloadTasks = new Dictionary();
             _initializedSessions = [];
         }
     }
-
-    private var _extensionContext:ExtensionContext;
-    private var _downloadTasks:Dictionary;
-    private var _initializedSessions:Array;
 
     public function initializeSession(session_id:String):void {
         if (session_id.indexOf(" ") > -1) {
