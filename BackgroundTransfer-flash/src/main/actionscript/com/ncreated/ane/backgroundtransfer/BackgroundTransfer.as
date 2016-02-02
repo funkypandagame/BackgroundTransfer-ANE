@@ -79,14 +79,14 @@ public class BackgroundTransfer extends EventDispatcher {
         return _initializedSessions.indexOf(session_id) >= 0;
     }
 
-    // does NOT work on Android!
+    // does NOT work on Android/PC!
     internal function resumeDownloadTask(task:BTDownloadTask):void {
         if (_extensionContext && isSessionInitialized(task.sessionID)) {
             _extensionContext.call(BTNativeMethods.resumeDownloadTask, task.taskID);
         }
     }
 
-    // does NOT work on Android!
+    // does NOT work on Android/PC!
     internal function suspendDownloadTask(task:BTDownloadTask):void {
         if (_extensionContext && isSessionInitialized(task.sessionID)) {
             _extensionContext.call(BTNativeMethods.suspendDownloadTask, task.taskID);

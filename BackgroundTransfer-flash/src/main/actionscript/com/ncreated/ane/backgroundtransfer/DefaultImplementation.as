@@ -1,34 +1,34 @@
 package com.ncreated.ane.backgroundtransfer
 {
-import br.com.stimuli.loadingANE.BulkLoader;
-import br.com.stimuli.loadingANE.BulkProgressEvent;
-import br.com.stimuli.loadingANE.loadingtypes.LoadingItem;
 
 import flash.events.ErrorEvent;
 import flash.events.Event;
 
 import flash.events.EventDispatcher;
+import flash.events.IOErrorEvent;
+import flash.events.ProgressEvent;
+import flash.events.SecurityErrorEvent;
 import flash.events.StatusEvent;
 import flash.filesystem.File;
 import flash.filesystem.FileMode;
 import flash.filesystem.FileStream;
+import flash.net.URLLoaderDataFormat;
+import flash.net.URLRequest;
 import flash.utils.ByteArray;
+import flash.utils.Dictionary;
 import flash.utils.setTimeout;
 
-public class DefaultImplementation extends EventDispatcher {
+internal class DefaultImplementation extends EventDispatcher {
 
-    private var loader : BulkLoader;
-
-    public static const INTERNAL_LOADER_NAME : String = "usedByAneName";
+    private var loaders : Dictionary;
 
     public function DefaultImplementation() {
-        loader = new BulkLoader(INTERNAL_LOADER_NAME);
+        loaders = new Dictionary();
     }
 
     public function call(functionName:String,... rest):Object {
         switch (functionName) {
             case BTNativeMethods.initializeSession:
-
                     if (validateParameters(rest, 1)) {
                         var sessionData : String = rest[0] + " ";
                         dispatchStatus("WARNING: Using default loader implementation. This should only happen on PC.", BTInternalMessages.DEBUG_LOG);
@@ -40,19 +40,33 @@ public class DefaultImplementation extends EventDispatcher {
                     var sessionId : String = rest[0];
                     var remoteURL : String = rest[1];
                     var localPath : String = rest[2];//it needs to remember this!
-                    var li : LoadingItem = loader.add(remoteURL, {id:sessionId + ":" + remoteURL, type:BulkLoader.TYPE_BINARY});
-                    li.extraData = localPath;
-                    li.addEventListener(Event.COMPLETE, onLoaded);
-                    li.addEventListener(BulkLoader.PROGRESS, onProgress);
-                    li.addEventListener(BulkLoader.ERROR, onError);
-                    loader.start();
+
+                    var loader : ExtendedURLLoader = new ExtendedURLLoader();
+                    loader.localPath = localPath;
+                    loader.id = sessionId + ":" + remoteURL;
+                    loaders[loader.id] = loader;
+                    loader.dataFormat = URLLoaderDataFormat.BINARY;
+                    loader.addEventListener(ProgressEvent.PROGRESS, onProgress, false, 0, true);
+                    loader.addEventListener(Event.COMPLETE, onLoaded, false, 0, true);
+                    loader.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
+                    loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
+                    loader.load(new URLRequest(remoteURL));
+
                 }
                 break;
             case BTNativeMethods.cancelDownloadTask:
                 if (validateParameters(rest, 1)) {
                     var taskId : String = rest[0];
-                    if (loader.remove(taskId)) {
-                        dispatchStatus("Task " + taskId + " cancelled.", BTInternalMessages.DEBUG_LOG);
+                    if (loaders[taskId]) {
+                        var toCancel : ExtendedURLLoader = loaders[taskId];
+                        toCancel.removeEventListener(ProgressEvent.PROGRESS, onProgress);
+                        toCancel.removeEventListener(Event.COMPLETE, onLoaded);
+                        toCancel.removeEventListener(IOErrorEvent.IO_ERROR, onError);
+                        toCancel.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
+                        toCancel.close();
+                        delete loaders[taskId];
+                        // Android throws similar looking errors
+                        dispatchStatus(escape(taskId) + " Error 1008 Download cancelled", BTInternalMessages.DOWNLOAD_TASK_ERROR);
                     }
                     else {
                         dispatchStatus("Cannot cancel task " + taskId + ", its not loading", BTInternalMessages.ERROR);
@@ -68,35 +82,35 @@ public class DefaultImplementation extends EventDispatcher {
 
 
     private function onLoaded(event: Event) : void {
-        var item : LoadingItem = event.target as LoadingItem;
-        var myByteArray : ByteArray = loader.getBinary(item.id);
+        var item : ExtendedURLLoader = event.target as ExtendedURLLoader;
+        var myByteArray : ByteArray = item.data;
         try {
             var fs : FileStream = new FileStream();
-            var targetFile : File = new File(item.extraData as String);
+            var targetFile : File = new File(item.localPath);
             fs.open(targetFile, FileMode.WRITE);
             fs.writeBytes(myByteArray, 0, myByteArray.length);
             fs.close();
-            loader.remove(item.id);
+            delete loaders[item.id];
         }
         catch (err: Error) {
             var toReturn : String = escape(item.id) + " Unable to write the file to the disk " + event;
-            loader.remove(item.id);
+            delete loaders[item.id];
             dispatchStatus(toReturn, BTInternalMessages.DOWNLOAD_TASK_ERROR);
             return;
         }
         dispatchStatus(escape(item.id), BTInternalMessages.DOWNLOAD_TASK_COMPLETED);
     }
 
-    private function onProgress(event: BulkProgressEvent) : void {
-        var item : LoadingItem = event.target as LoadingItem;
+    private function onProgress(event: ProgressEvent) : void {
+        var item : ExtendedURLLoader = event.target as ExtendedURLLoader;
         var toSend : String = escape(item.id) + " " + event.bytesLoaded + " " + event.bytesTotal;
         dispatchStatus(toSend, BTInternalMessages.DOWNLOAD_TASK_PROGRESS);
     }
 
     private function onError(event :ErrorEvent) : void {
-        var item : LoadingItem = event.target as LoadingItem;
-        var toReturn : String = escape(item.id) + " Error " + event;
-        loader.remove(item.id);
+        var item : ExtendedURLLoader = event.target as ExtendedURLLoader;
+        var toReturn : String = escape(item.id) + " " + event;
+        delete loaders[item.id];
         dispatchStatus(toReturn,  BTInternalMessages.DOWNLOAD_TASK_ERROR);
     }
 
