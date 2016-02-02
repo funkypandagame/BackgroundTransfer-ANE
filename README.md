@@ -1,19 +1,22 @@
-#Background Transfer - Adobe AIR Native Extension for iOS + Android
+#Native downloader - Adobe AIR Native Extension for iOS + Android
 
-This [AIR Native Extension](http://www.adobe.com/devnet/air/native-extensions-for-air.html) provides AS3 API to use [iOS Background Transfer Service](http://www.appcoda.com/background-transfer-service-ios7/) and an Android download manager for downloading files in Adobe AIR application.
+This [AIR Native Extension](http://www.adobe.com/devnet/air/native-extensions-for-air.html) provides AS3 API for downloading files natively on iOS and Android. This is a fork of the iOS only [BackgroundTransfer-ANE](https://github.com/ncreated/BackgroundTransfer-ANE) project  
+It is primarily intended for downloading large files.
 
-Starting from iOS7, with Background Transfer Service:
+###iOS features
 
- - downloads and uploads are managed by iOS;                                                                          
+It uses [iOS Background Transfer Service](http://www.appcoda.com/background-transfer-service-ios7/):                                                                     
  - the transfer continues even when the user sends the app to the background (e.g. switches to another app);
- - there's no time limit for download/upload;
- - if the app crashes during the download/upload, the retransmission will start automatically when the app is launched;
-
+ - the transfer continues when the app runs out of memory while in background. To stop the download close the app.  
+ - there's no time limit for download/upload;   
+ - if the app crashes during the download/upload, the retransmission will start automatically when the app is launched;   
 Read more about NSURLSession in Apple documentation: [https://developer.apple.com/library/IOs/documentation/Foundation/Reference/NSURLSession_class/index.html]()
 Read more about multitasking in iOS: [NSURLSession and Background Transfer Service](http://www.objc.io/issue-5/multitasking.html)
 
-On Android it uses a multi-threaded download library, [ThinDownloadManager](https://github.com/smanikandan14/ThinDownloadManager)
+On Android it uses a multi-threaded download library, [ThinDownloadManager](https://github.com/smanikandan14/ThinDownloadManager)       
+Note: The Android library has no session handling, so onBackgroundSessionInitialized will always return nothing. Also you downloads will fail it the connectivity changes.
 
+For PC there it has AS3 code to make development easy.
 
 ## Usage
 
@@ -30,7 +33,7 @@ downloadTask.resume();
 
 ```
 
-To continue download tasks that were interrupted (for instance, due to app crash) implement initialization event:
+To continue download tasks that were interrupted (for instance, due to app crash) implement initialization event (iOS only):
 
 ```javascript
 BackgroundTransfer.instance.addEventListener(BTSessionInitializedEvent.INITIALIZED, onBackgroundSessionInitialized, false, 0, true);
@@ -42,30 +45,25 @@ private function onBackgroundSessionInitialized(event:BTSessionInitializedEvent)
 }
 ```
 
-Run the demo project for more implementation details.
+Run the demo project in the testapp directory for more implementation details.
 
+Check ANETest-app.xml that it uses the same name as the app certificate has.
 ## Building
 
 Install Maven. Then run
 
 mvn clean install
 
-To develop with the test app:
-1. run mvn clean install to compile the .ANE
-2. in IntelliJ's left pane right click on InAppPurchase.ane and select synchronize.
-3. run or debug it.
-
-Check ANETest-app.xml that it uses the same name as the app certificate has.
-
-Note: Android has no session handling, so onBackgroundSessionInitialized will always return nothing. Also you downloads will fail it the connectivity changes.
+To developer the ANE:           
+1. run mvn clean install to compile the .ANE     
+2. in IntelliJ's left pane right click on InAppPurchase.ane and select synchronize.       
+3. run or debug it.         
 
 
 ##License
-
-Default (not native) implementation of this ANE uses GreenSock LoaderMax for downloading files. `greensock.swc` library is subject to its own license. Please follow [https://greensock.com/licensing/]() for more details.
-
-
 ------------------------------------
+
+ThinDownloadManager is under Apache 2.0 license, the rest of the library is under MIT:
 
 The MIT License (MIT)
 
