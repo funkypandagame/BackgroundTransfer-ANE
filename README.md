@@ -13,8 +13,9 @@ It uses [iOS Background Transfer Service](http://www.appcoda.com/background-tran
 Read more about NSURLSession in Apple documentation: [https://developer.apple.com/library/IOs/documentation/Foundation/Reference/NSURLSession_class/index.html]()
 Read more about multitasking in iOS: [NSURLSession and Background Transfer Service](http://www.objc.io/issue-5/multitasking.html)
 
-On Android it uses a multi-threaded download library, [ThinDownloadManager](https://github.com/smanikandan14/ThinDownloadManager)       
-Note: The Android library has no session handling, so onBackgroundSessionInitialized will always return nothing. Also you downloads will fail it the connectivity changes.
+On Android it uses a multi-threaded download library, [Android-HttpDownloadManager](https://github.com/Coolerfall/Android-HttpDownloadManager)       
+Note: The Android library has no session handling, so onBackgroundSessionInitialized will always return nothing. 
+If a download failed and you try to download the same URL to the same location again, it will resume the download. If you want to remove the partial file call cancel() on the download.
 
 For PC there it has AS3 code to make development easy.
 

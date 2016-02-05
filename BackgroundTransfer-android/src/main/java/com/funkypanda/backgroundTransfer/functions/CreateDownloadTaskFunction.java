@@ -4,11 +4,11 @@ import android.net.Uri;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
+import com.coolerfall.downloadANE.DownloadCallback;
+import com.coolerfall.downloadANE.DownloadRequest;
 import com.funkypanda.backgroundTransfer.ANEUtils;
 import com.funkypanda.backgroundTransfer.Extension;
 import com.funkypanda.backgroundTransfer.FlashConstants;
-import com.thin.downloadmanager.DownloadRequest;
-import com.thin.downloadmanager.DownloadStatusListener;
 
 public class CreateDownloadTaskFunction implements FREFunction
 {
@@ -38,25 +38,36 @@ public class CreateDownloadTaskFunction implements FREFunction
                 return null;
             }
         }
-        Uri destinationUri = Uri.parse(destPath);
-        DownloadRequest downloadRequest = new DownloadRequest(downloadUri)
-                .setDestinationURI(destinationUri)
-                .setDownloadListener(new DownloadStatusListener() {
+
+        DownloadRequest downloadRequest = new DownloadRequest(remoteURL)
+                .setProgressInterval(100)
+                .setDestFilePath(destPath)
+                .setDownloadCallback(new DownloadCallback() {
                     @Override
-                    public void onDownloadComplete(int id) {
+                    public void onStart(int downloadId, long totalBytes) {
+                        Extension.log("Starting download");
+                    }
+
+                    @Override
+                    public void onRetry(int downloadId) {
+                        Extension.log("Retrying download");
+                    }
+
+                    @Override
+                    public void onProgress(int downloadId, long downloadedBytes, long totalBytes) {
+                        String toReturn = getTaskId() + " " + downloadedBytes + " " + totalBytes;
+                        Extension.dispatchStatusEventAsync(FlashConstants.DOWNLOAD_TASK_PROGRESS, toReturn);
+                    }
+
+                    @Override
+                    public void onSuccess(int downloadId, String filePath) {
                         Extension.dispatchStatusEventAsync(FlashConstants.DOWNLOAD_TASK_COMPLETED, getTaskId());
                     }
 
                     @Override
-                    public void onDownloadFailed(int id, int errorCode, String errorMessage) {
-                        String toReturn = getTaskId() + " Error " + errorCode + " " + errorMessage;
+                    public void onFailure(int downloadId, int statusCode, String errorMessage) {
+                        String toReturn = getTaskId() + " Error " + statusCode + " " + errorMessage;
                         Extension.dispatchStatusEventAsync(FlashConstants.DOWNLOAD_TASK_ERROR, toReturn);
-                    }
-
-                    @Override
-                    public void onProgress(int id, long totalBytes, long downloadedBytes, int progress) {
-                        String toReturn = getTaskId() + " " + downloadedBytes + " " + totalBytes;
-                        Extension.dispatchStatusEventAsync(FlashConstants.DOWNLOAD_TASK_PROGRESS, toReturn);
                     }
 
                     private String getTaskId() {

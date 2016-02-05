@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.util.Log;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREExtension;
-import com.thin.downloadmanager.ThinDownloadManager;
+import com.coolerfall.downloadANE.DownloadManager;
 
 public class Extension implements FREExtension
 {
@@ -14,12 +14,11 @@ public class Extension implements FREExtension
 
     private static ExtensionContext context;
 
-    public static ThinDownloadManager downloadManager;
+    public static DownloadManager downloadManager;
 
     public static void dispatchStatusEventAsync(String eventCode, String message)
     {
         if (context != null) {
-            Log.d(TAG, message + " " + eventCode);
             context.dispatchStatusEventAsync(message, eventCode);
         }
         else {
@@ -50,18 +49,22 @@ public class Extension implements FREExtension
     }
 
     public void initialize() {
-        downloadManager = new ThinDownloadManager();
+        downloadManager = new DownloadManager();
     }
 
     public static void log(String message)
     {
         Log.d(TAG, message);
-        context.dispatchStatusEventAsync(message, FlashConstants.DEBUG_LOG);
+        if (context != null) {
+            context.dispatchStatusEventAsync(message, FlashConstants.DEBUG_LOG);
+        }
     }
 
     public static void logError(String message)
     {
         Log.e(TAG, message);
-        context.dispatchStatusEventAsync(message, FlashConstants.ERROR);
+        if (context != null) {
+            context.dispatchStatusEventAsync(message, FlashConstants.ERROR);
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 import com.funkypanda.backgroundTransfer.ANEUtils;
 import com.funkypanda.backgroundTransfer.Extension;
+import com.funkypanda.backgroundTransfer.FlashConstants;
 
 public class CancelDownloadTaskFunction implements FREFunction
 {
@@ -26,9 +27,14 @@ public class CancelDownloadTaskFunction implements FREFunction
         }
         String taskURL = taskId.substring(numToCut);
 
-        int result = Extension.downloadManager.cancel(taskURL);
-        if (result == 0) {
+        boolean result = Extension.downloadManager.cancel(taskURL);
+        if (!result) {
             Extension.logError("Failed to cancel download with URL " + taskURL);
+        }
+        else {
+            Extension.log("Cancelled download with URL " + taskURL);
+            String toReturn = ANEUtils.encodeString(Extension.sessionId + ":" + taskURL) + " Error 1008 Download cancelled";
+            Extension.dispatchStatusEventAsync(FlashConstants.DOWNLOAD_TASK_ERROR, toReturn);
         }
         return null;
     }

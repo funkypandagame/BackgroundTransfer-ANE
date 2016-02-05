@@ -106,7 +106,7 @@ package
 
             button = new Button();
             button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
-                currentTask = service.createDownloadTask(SESSION_ID, "https://s3.amazonaws.com/rinoa-mountain/artAssets/master-722/full/PC_SD.zip",
+                currentTask = service.createDownloadTask(SESSION_ID, "https://s3.amazonaws.com/rinoa-mountain/artAssets/master-723/full/PC_SD.zip",
                                         File.applicationStorageDirectory.nativePath + "/dsfsdf.zip");
                 if (currentTask) {
                     currentTask.addEventListener(ProgressEvent.PROGRESS, logDownloadProgress);
@@ -114,7 +114,7 @@ package
                         log("DownloadTaskComplete");
                     });
                     currentTask.addEventListener(ErrorEvent.ERROR, function(evt:ErrorEvent):void {
-                        log("DownloadTaskError " + evt.text + " " + evt.errorID);
+                        log("DownloadTaskError " + evt.text);
                     });
                 }
                 else {

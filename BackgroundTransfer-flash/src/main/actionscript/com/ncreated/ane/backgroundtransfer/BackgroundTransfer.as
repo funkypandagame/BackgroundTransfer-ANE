@@ -57,6 +57,7 @@ public class BackgroundTransfer extends EventDispatcher {
         var task:BTDownloadTask = new BTDownloadTask(session_id, remote_url, local_path);
 
         if (_downloadTasks[task.taskID]) {
+            dispatchEvent(new BTDebugEvent("Download task with ID " + task.taskID + " already exists"));
             // task with this ID already exists (this download is already running within this session)
             return _downloadTasks[task.taskID];
         }
