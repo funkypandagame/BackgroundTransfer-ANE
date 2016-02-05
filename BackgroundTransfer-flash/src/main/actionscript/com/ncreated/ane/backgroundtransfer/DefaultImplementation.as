@@ -73,6 +73,26 @@ internal class DefaultImplementation extends EventDispatcher {
                     }
                 }
                 break;
+            case BTNativeMethods.saveFileTask:
+                if (validateParameters(rest, 2)) {
+                    var path : String = rest[0];
+                    var byteArray : ByteArray = rest[1];
+                    var f : File = File.applicationStorageDirectory.resolvePath(path);
+                    try
+                    {
+                        var fs : FileStream = new FileStream();
+                        fs.open(f, FileMode.WRITE);
+                        fs.writeBytes(byteArray);
+                        fs.close();
+                        return true;
+                    }
+                    catch (e : Error)
+                    {
+                        dispatchStatus("Error storing file " + path + " " + e.message, BTInternalMessages.ERROR);
+                        return false;
+                    }
+                }
+                break;
             default:
                     BackgroundTransfer.instance.dispatchEvent(new BTDebugEvent(functionName + " not implemented in this platform"));
                 break;

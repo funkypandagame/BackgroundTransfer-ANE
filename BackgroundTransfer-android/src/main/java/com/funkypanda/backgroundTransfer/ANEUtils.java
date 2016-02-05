@@ -85,6 +85,17 @@ public class ANEUtils {
         return asVector;
     }
 
+    public static FREObject booleanAsFREObject(boolean val)
+    {
+        FREObject toReturn = null;
+        try {
+            toReturn = FREObject.newObject(val);
+        } catch (FREWrongThreadException e) {
+            e.printStackTrace();
+        }
+        return toReturn;
+    }
+
     public static String encodeString(String toEncode)
     {
         String toReturn = "";

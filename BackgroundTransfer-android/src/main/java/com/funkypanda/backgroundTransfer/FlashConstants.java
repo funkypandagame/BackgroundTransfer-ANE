@@ -18,6 +18,8 @@ public class FlashConstants {
     final public static String resumeDownloadTask = "BGT_resumeDownloadTask";
     final public static String suspendDownloadTask = "BGT_suspendDownloadTask";
     final public static String cancelDownloadTask = "BGT_cancelDownloadTask";
-    final public static String crashTheAppTask = "BGT___crashTheApp";
+
+    final public static String saveFileTask = "BGT_saveFileTask";
+    final public static String unZipTask = "BGT_extractZipTask";
 
 }

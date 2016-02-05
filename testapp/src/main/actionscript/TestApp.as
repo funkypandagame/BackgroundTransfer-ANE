@@ -17,11 +17,14 @@ package
 
     import flash.events.ProgressEvent;
     import flash.filesystem.File;
+import flash.filesystem.FileMode;
+import flash.filesystem.FileStream;
 
-    import flash.system.Capabilities;
+import flash.system.Capabilities;
 
     import flash.text.TextFormat;
-    import flash.utils.getTimer;
+import flash.utils.ByteArray;
+import flash.utils.getTimer;
 
     import starling.display.Sprite;
     import starling.events.Event;
@@ -135,6 +138,39 @@ package
                 }
             });
             button.label = "cancel good URL";
+            button.validate();
+            container.addChild(button);
+
+            button = new Button();
+            button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
+                var file : File = File.applicationStorageDirectory.resolvePath("testFile.txt");
+                var ba : ByteArray = new ByteArray();
+                ba.writeMultiByte("some test String to write", "utf-8");
+                var success : Boolean = service.saveFile(file.nativePath, ba);
+                log("File write success? " + success + " exists? " + file.exists);
+                if (file.exists) {
+                    var fDataStream : FileStream = new FileStream();
+                    fDataStream.open(file, FileMode.READ);
+                    log("file contents: " + fDataStream.readUTFBytes(fDataStream.bytesAvailable) );
+                    fDataStream.close();
+                }
+            });
+            button.label = "Save file";
+            button.validate();
+            container.addChild(button);
+
+            button = new Button();
+            button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
+                var file : File = File.applicationStorageDirectory.resolvePath("testFile.txt");
+                if (file.exists) {
+                    file.deleteFile();
+                    log("File deleted");
+                }
+                else {
+                    log("File does not exist!");
+                }
+            });
+            button.label = "delete file";
             button.validate();
             container.addChild(button);
 

@@ -8,7 +8,7 @@ import com.coolerfall.downloadANE.DownloadManager;
 
 public class Extension implements FREExtension
 {
-    private static final String TAG = "AirBackgroundTransfer";
+    public static final String TAG = "AirBackgroundTransfer";
 
     public static String sessionId;
 

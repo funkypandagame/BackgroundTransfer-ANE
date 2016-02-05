@@ -11,7 +11,8 @@ internal class BTNativeMethods {
     internal static const resumeDownloadTask:String = "BGT_resumeDownloadTask";
     internal static const suspendDownloadTask:String = "BGT_suspendDownloadTask";
     internal static const cancelDownloadTask:String = "BGT_cancelDownloadTask";
+    internal static const saveFileTask:String = "BGT_saveFileTask";
+    internal static const unZipTask:String = "BGT_extractZipTask";
 
-    internal static const crashTheAppTask:String = "BGT___crashTheApp";
 }
 }

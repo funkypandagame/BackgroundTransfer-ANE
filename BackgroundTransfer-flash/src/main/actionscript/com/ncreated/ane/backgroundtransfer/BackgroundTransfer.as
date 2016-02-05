@@ -4,6 +4,7 @@ import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
 import flash.system.Capabilities;
+import flash.utils.ByteArray;
 import flash.utils.Dictionary;
 
 public class BackgroundTransfer extends EventDispatcher {
@@ -70,10 +71,8 @@ public class BackgroundTransfer extends EventDispatcher {
         return null;
     }
 
-    public function __crashTheApp():void {
-        if (_extensionContext) {
-            _extensionContext.call(BTNativeMethods.crashTheAppTask);
-        }
+    public function saveFile(local_path:String, fileData:ByteArray):Boolean {
+        return _extensionContext.call(BTNativeMethods.saveFileTask, local_path, fileData);
     }
 
     public function isSessionInitialized(session_id:String):Boolean {
