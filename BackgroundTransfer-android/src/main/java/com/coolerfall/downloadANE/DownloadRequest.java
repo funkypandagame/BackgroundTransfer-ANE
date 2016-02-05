@@ -478,7 +478,7 @@ public class DownloadRequest implements Comparable<DownloadRequest> {
 	 * @return temporary destination file path
 	 */
 	protected String getTmpDestinationPath() {
-		return getDestFilePath() + urlCRC + ".tmp";
+		return getDestFilePath() + urlCRC + ".tmpDwn";
 	}
 
 	/**
