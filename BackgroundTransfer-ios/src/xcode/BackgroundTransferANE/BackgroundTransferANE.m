@@ -9,6 +9,7 @@
 #import "BGT_InternalMessages.h"
 #import "BGT_NSRULSessionController.h"
 #import "NSString+ANE.h"
+#import "SSZipArchive/ZipArchive.h"
 
 #define MAP_FUNCTION(fn, data) { (const uint8_t*)(#fn), (data), &(fn) }
 
@@ -172,6 +173,28 @@ FREObject BGT_saveFileTask(FREContext context, void* functionData, uint32_t argc
     return retBool;
 }
 
+FREObject BGT_extractZipTask(FREContext context, void* functionData, uint32_t argc, FREObject argv[]) {
+    
+    uint32_t length = 0;
+    const uint8_t *zipFilePath = NULL;
+    const uint8_t *destPath = NULL;
+    
+    uint32_t unzipSuccess = false;
+    
+    if (FREGetObjectAsUTF8(argv[0], &length, &zipFilePath) == FRE_OK &&
+        FREGetObjectAsUTF8(argv[1], &length, &destPath) == FRE_OK) {
+        
+        NSString *zipFilePathStr = [NSString stringWithUTF8String:(char*)zipFilePath];
+        NSString *destPathStr = [NSString stringWithUTF8String:(char*)destPath];
+        
+        unzipSuccess = [SSZipArchive unzipFileAtPath:zipFilePathStr toDestination: destPathStr];
+    }
+    FREObject retBool = nil;
+    FRENewObjectFromBool(unzipSuccess, &retBool);
+    return retBool;
+}
+
+
 #pragma mark -
 #pragma mark ANE -> Actionscript
 
@@ -224,7 +247,8 @@ void CLBackgroundTransferANEContextInitializer(void *extData, const uint8_t *ctx
         MAP_FUNCTION(BGT_suspendDownloadTask, NULL),
         MAP_FUNCTION(BGT_cancelDownloadTask, NULL),
         MAP_FUNCTION(BGT_getDownloadTaskPropertiesArray, NULL),
-        MAP_FUNCTION(BGT_saveFileTask, NULL)
+        MAP_FUNCTION(BGT_saveFileTask, NULL),
+        MAP_FUNCTION(BGT_extractZipTask, NULL)
     };
     
 	*numFunctionsToSet = sizeof(functionMap) / sizeof(FRENamedFunction);

@@ -75,6 +75,10 @@ public class BackgroundTransfer extends EventDispatcher {
         return _extensionContext.call(BTNativeMethods.saveFileTask, local_path, fileData);
     }
 
+    public function unzipFile(zipFilePath:String, destPath:String):Boolean {
+        return _extensionContext.call(BTNativeMethods.unZipTask, zipFilePath, destPath);
+    }
+
     public function isSessionInitialized(session_id:String):Boolean {
         return _initializedSessions.indexOf(session_id) >= 0;
     }
