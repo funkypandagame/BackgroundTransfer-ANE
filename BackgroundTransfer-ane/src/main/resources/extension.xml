@@ -7,7 +7,7 @@
     <platforms>
         <platform name="iPhone-ARM">
             <applicationDeployment>
-                <nativeLibrary>libBackgroundTransfer.a</nativeLibrary>
+                <nativeLibrary>libBackgroundTransfer-ios.a</nativeLibrary>
                 <initializer>CLBackgroundTransferANEInitializer</initializer>
                 <finalizer>CLBackgroundTransferANEFinalizer</finalizer>
 
@@ -15,7 +15,7 @@
         </platform>
         <platform name="iPhone-x86">
             <applicationDeployment>
-                <nativeLibrary>libBackgroundTransfer.a</nativeLibrary>
+                <nativeLibrary>libBackgroundTransfer-ios.a</nativeLibrary>
                 <initializer>CLBackgroundTransferANEInitializer</initializer>
                 <finalizer>CLBackgroundTransferANEFinalizer</finalizer>
             </applicationDeployment>

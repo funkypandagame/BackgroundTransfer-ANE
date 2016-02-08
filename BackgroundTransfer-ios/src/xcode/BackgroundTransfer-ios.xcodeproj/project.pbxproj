@@ -29,6 +29,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		07792C981C68044200F3B2FB /* BackgroundTransfer-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BackgroundTransfer-Prefix.pch"; sourceTree = "<group>"; };
+		07792C991C6805F000F3B2FB /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashRuntimeExtensions.h; sourceTree = "<group>"; };
 		544CF3A1192160E700C6564A /* BGT_DownloadTaskConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGT_DownloadTaskConfiguration.h; sourceTree = "<group>"; };
 		544CF3A2192160E700C6564A /* BGT_DownloadTaskConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGT_DownloadTaskConfiguration.m; sourceTree = "<group>"; };
 		544CF3A3192160E700C6564A /* BGT_NSRULSessionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGT_NSRULSessionController.h; sourceTree = "<group>"; };
@@ -37,13 +39,11 @@
 		544CF3A6192160E700C6564A /* NSObject+AssociatedObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+AssociatedObject.m"; sourceTree = "<group>"; };
 		544CF3AA1921979E00C6564A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		544CF3FB1930CEE800C6564A /* BGT_InternalMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGT_InternalMessages.h; sourceTree = "<group>"; };
-		5471FF34190F1E0A0030D2E0 /* libBackgroundTransferANE.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBackgroundTransferANE.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5471FF34190F1E0A0030D2E0 /* libbackgroundtransfer-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libbackgroundtransfer-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5471FF37190F1E0A0030D2E0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		5471FF3B190F1E0A0030D2E0 /* BackgroundTransferANE-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BackgroundTransferANE-Prefix.pch"; sourceTree = "<group>"; };
 		5471FF3E190F1E0A0030D2E0 /* BackgroundTransferANE.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackgroundTransferANE.m; sourceTree = "<group>"; };
 		5471FF45190F1E0A0030D2E0 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		5471FF48190F1E0A0030D2E0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		5471FF5D190F1E730030D2E0 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = ../../../../../../.gradle/gradleFx/sdks/0526c8c54013a500d162fe4f65b1e68aca011c8a/include/FlashRuntimeExtensions.h; sourceTree = "<group>"; };
 		54933CE11930D6F3006CCE7E /* NSString+ANE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ANE.h"; sourceTree = "<group>"; };
 		54933CE21930D6F3006CCE7E /* NSString+ANE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ANE.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -73,7 +73,7 @@
 		5471FF35190F1E0A0030D2E0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5471FF34190F1E0A0030D2E0 /* libBackgroundTransferANE.a */,
+				5471FF34190F1E0A0030D2E0 /* libbackgroundtransfer-ios.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -110,8 +110,8 @@
 		5471FF3A190F1E0A0030D2E0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				5471FF5D190F1E730030D2E0 /* FlashRuntimeExtensions.h */,
-				5471FF3B190F1E0A0030D2E0 /* BackgroundTransferANE-Prefix.pch */,
+				07792C981C68044200F3B2FB /* BackgroundTransfer-Prefix.pch */,
+				07792C991C6805F000F3B2FB /* FlashRuntimeExtensions.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -119,9 +119,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5471FF33190F1E090030D2E0 /* BackgroundTransferANE */ = {
+		5471FF33190F1E090030D2E0 /* backgroundtransfer-ios */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5471FF57190F1E0A0030D2E0 /* Build configuration list for PBXNativeTarget "BackgroundTransferANE" */;
+			buildConfigurationList = 5471FF57190F1E0A0030D2E0 /* Build configuration list for PBXNativeTarget "backgroundtransfer-ios" */;
 			buildPhases = (
 				5471FF30190F1E090030D2E0 /* Sources */,
 				5471FF31190F1E090030D2E0 /* Frameworks */,
@@ -132,9 +132,9 @@
 			);
 			dependencies = (
 			);
-			name = BackgroundTransferANE;
+			name = "backgroundtransfer-ios";
 			productName = BackgroundTransferANE;
-			productReference = 5471FF34190F1E0A0030D2E0 /* libBackgroundTransferANE.a */;
+			productReference = 5471FF34190F1E0A0030D2E0 /* libbackgroundtransfer-ios.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -146,7 +146,7 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Code Latte";
 			};
-			buildConfigurationList = 5471FF2F190F1E090030D2E0 /* Build configuration list for PBXProject "BackgroundTransferANE" */;
+			buildConfigurationList = 5471FF2F190F1E090030D2E0 /* Build configuration list for PBXProject "BackgroundTransfer-ios" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -158,7 +158,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5471FF33190F1E090030D2E0 /* BackgroundTransferANE */,
+				5471FF33190F1E090030D2E0 /* backgroundtransfer-ios */,
 			);
 		};
 /* End PBXProject section */
@@ -269,9 +269,9 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				DSTROOT = /tmp/BackgroundTransferANE.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BackgroundTransferANE/BackgroundTransferANE-Prefix.pch";
+				GCC_PREFIX_HEADER = "BackgroundTransferANE/BackgroundTransfer-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "backgroundtransfer-ios";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -282,9 +282,9 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				DSTROOT = /tmp/BackgroundTransferANE.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BackgroundTransferANE/BackgroundTransferANE-Prefix.pch";
+				GCC_PREFIX_HEADER = "BackgroundTransferANE/BackgroundTransfer-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "backgroundtransfer-ios";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -292,7 +292,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5471FF2F190F1E090030D2E0 /* Build configuration list for PBXProject "BackgroundTransferANE" */ = {
+		5471FF2F190F1E090030D2E0 /* Build configuration list for PBXProject "BackgroundTransfer-ios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5471FF55190F1E0A0030D2E0 /* Debug */,
@@ -301,7 +301,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5471FF57190F1E0A0030D2E0 /* Build configuration list for PBXNativeTarget "BackgroundTransferANE" */ = {
+		5471FF57190F1E0A0030D2E0 /* Build configuration list for PBXNativeTarget "backgroundtransfer-ios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5471FF58190F1E0A0030D2E0 /* Debug */,

@@ -139,9 +139,37 @@ FREObject BGT_getDownloadTaskPropertiesArray(FREContext context, void* functionD
     return NULL;
 }
 
-FREObject BGT___crashTheApp(FREContext context, void* functionData, uint32_t argc, FREObject argv[]) {
-    NSLog(@"%@", @[][10]);
-    return NULL;
+FREObject BGT_saveFileTask(FREContext context, void* functionData, uint32_t argc, FREObject argv[]) {
+    
+    uint32_t length = 0;
+    const uint8_t *localPath = NULL;
+    FREByteArray fileData;
+    
+    uint32_t writeSuccess = false;
+    
+    if (FREGetObjectAsUTF8(argv[0], &length, &localPath) == FRE_OK &&
+        FREAcquireByteArray(argv[1], &fileData) == FRE_OK) {
+        
+        NSString *localPathStr = [NSString stringWithUTF8String:(char*)localPath];
+        
+        uint8_t *data = fileData.bytes;
+        
+        NSOutputStream *stream = [[NSOutputStream alloc] initToFileAtPath:localPathStr append:NO];
+        [stream open];
+        
+        NSData *toWrite = [NSData dataWithBytes:(const void *)data length:fileData.length];
+        
+        NSInteger written = [stream write:toWrite.bytes maxLength:toWrite.length];
+        [stream close];
+        
+        if (written == toWrite.length) {
+            writeSuccess = true;
+        }
+        FREReleaseByteArray(argv[1]);
+    }
+    FREObject retBool = nil;
+    FRENewObjectFromBool(writeSuccess, &retBool);
+    return retBool;
 }
 
 #pragma mark -
@@ -196,7 +224,7 @@ void CLBackgroundTransferANEContextInitializer(void *extData, const uint8_t *ctx
         MAP_FUNCTION(BGT_suspendDownloadTask, NULL),
         MAP_FUNCTION(BGT_cancelDownloadTask, NULL),
         MAP_FUNCTION(BGT_getDownloadTaskPropertiesArray, NULL),
-        MAP_FUNCTION(BGT___crashTheApp, NULL)
+        MAP_FUNCTION(BGT_saveFileTask, NULL)
     };
     
 	*numFunctionsToSet = sizeof(functionMap) / sizeof(FRENamedFunction);

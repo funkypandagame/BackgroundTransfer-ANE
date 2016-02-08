@@ -145,7 +145,7 @@ import flash.utils.getTimer;
             button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
                 var file : File = File.applicationStorageDirectory.resolvePath("testFile.txt");
                 var ba : ByteArray = new ByteArray();
-                ba.writeMultiByte("some test String to write", "utf-8");
+                ba.writeMultiByte("some test String to write<>?£$%ÉRó", "utf-8");
                 var success : Boolean = service.saveFile(file.nativePath, ba);
                 log("File write success? " + success + " exists? " + file.exists);
                 if (file.exists) {
@@ -184,8 +184,9 @@ import flash.utils.getTimer;
 
             buttonBarHeight = Math.ceil(0.5 * container.numChildren) * 60 + 5;
             container.height = buttonBarHeight;
+            container.y = isiOS ? 35 : 0;
             logTF.height = stage.stageHeight - buttonBarHeight;
-            logTF.y = buttonBarHeight;
+            logTF.y = buttonBarHeight + container.y;
 
             log("Testing application for the downloader ANE.");
 

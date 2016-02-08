@@ -34,7 +34,7 @@
                                 <resource>
                                     <directory>${project.basedir}/../BackgroundTransfer-ios/target/Release/</directory>
                                     <includes>
-                                        <include>libBackgroundTransfer.a</include>
+                                        <include>libBackgroundTransfer-ios.a</include>
                                     </includes>
                                 </resource>
                             </resources>
