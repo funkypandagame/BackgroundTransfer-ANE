@@ -1,6 +1,9 @@
 package com.ncreated.ane.backgroundtransfer
 {
 
+import com.coltware.airxzipANE.ZipEntry;
+import com.coltware.airxzipANE.ZipFileReader;
+
 import flash.events.ErrorEvent;
 import flash.events.Event;
 
@@ -89,6 +92,44 @@ internal class DefaultImplementation extends EventDispatcher {
                     catch (e : Error)
                     {
                         dispatchStatus("Error storing file " + path + " " + e.message, BTInternalMessages.ERROR);
+                        return false;
+                    }
+                }
+                break;
+            case BTNativeMethods.unZipTask:
+                if (validateParameters(rest, 2))
+                {
+                    var zipFilePath : File = new File(rest[0]);
+                    var destPath : File = new File(rest[1]);
+
+                    var outStream : FileStream = new FileStream();
+                    var zipReader : ZipFileReader = new ZipFileReader();
+                    try {
+                        zipReader.open(zipFilePath);
+                        var allZipEntries:Vector.<ZipEntry> = zipReader.getEntries();
+                        for each (var entry:ZipEntry in allZipEntries)
+                        {
+                            var fileName:String = entry.getFilename("utf-8");
+                            var isDirectory:Boolean = fileName.substr(fileName.length - 1, fileName.length) == "/";
+                            var file:File = destPath.resolvePath(entry.getFilename("utf-8"));
+                            if (!isDirectory)
+                            {
+                                var data:ByteArray = zipReader.unzip(entry);
+                                outStream.open(file, FileMode.WRITE);
+                                outStream.writeBytes(data, 0, data.length);
+                                outStream.close();
+                            }
+                            else if (!file.exists)
+                            {
+                                file.createDirectory();
+                            }
+                        }
+                        zipReader.close();
+                        return true;
+                    }
+                    catch (err : Error)
+                    {
+                        dispatchStatus("Error unzipping file " + path + " " + err.message, BTInternalMessages.ERROR);
                         return false;
                     }
                 }

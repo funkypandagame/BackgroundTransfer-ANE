@@ -3,6 +3,7 @@ package com.ncreated.ane.backgroundtransfer {
 import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
+import flash.filesystem.File;
 import flash.system.Capabilities;
 import flash.utils.ByteArray;
 import flash.utils.Dictionary;
@@ -76,6 +77,12 @@ public class BackgroundTransfer extends EventDispatcher {
     }
 
     public function unzipFile(zipFilePath:String, destPath:String):Boolean {
+        var zipFile : File = new File(zipFilePath);
+        if (!zipFile.exists)
+        {
+            dispatchEvent(new BTErrorEvent("Zip file does not exist " + zipFile.nativePath));
+            return false;
+        }
         return _extensionContext.call(BTNativeMethods.unZipTask, zipFilePath, destPath);
     }
 
@@ -119,7 +126,6 @@ public class BackgroundTransfer extends EventDispatcher {
                 }
             }
         }
-
         dispatchEvent(new BTSessionInitializedEvent(session_id, runningTasks));
     }
 
