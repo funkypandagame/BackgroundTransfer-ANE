@@ -6,8 +6,9 @@ package
     import com.ncreated.ane.backgroundtransfer.BTErrorEvent;
     import com.ncreated.ane.backgroundtransfer.BTSessionInitializedEvent;
     import com.ncreated.ane.backgroundtransfer.BackgroundTransfer;
+import com.ncreated.ane.backgroundtransfer.DefaultImplementation;
 
-    import feathers.controls.Button;
+import feathers.controls.Button;
     import feathers.controls.ScrollContainer;
     import feathers.controls.ScrollText;
     import feathers.layout.TiledColumnsLayout;
@@ -179,6 +180,7 @@ import flash.utils.getTimer;
                 var file : File = File.applicationStorageDirectory.resolvePath("test.zip");
                 if (file.exists) {
                     var unzipFolder : File = File.applicationStorageDirectory.resolvePath("unzipFolder");
+                    var t1 : int = getTimer();
                     var success : Boolean = service.unzipFile(file.nativePath, unzipFolder.nativePath);
                     var contentsStr : String = "";
                     if (unzipFolder.exists) {
@@ -187,14 +189,40 @@ import flash.utils.getTimer;
                             contentsStr = contentsStr + unzipped.name + " ";
                         }
                     }
-                    log("unzip complete, success: " + success + " unzip folder exists: " + unzipFolder.exists +
-                        " files in unzip: " + contentsStr)
+                    log("unzip native complete, success: " + success + " unzip folder exists: " + unzipFolder.exists +
+                        " files in unzip: " + contentsStr + " time: " + (getTimer() - t1) + " ms");
                 }
                 else {
                     log("File does not exist!");
                 }
             });
-            button.label = "unzip downloaded";
+            button.label = "unzip native";
+            button.validate();
+            container.addChild(button);
+
+            button = new Button();
+            button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
+                var file : File = File.applicationStorageDirectory.resolvePath("test.zip");
+                if (file.exists) {
+                    var unzipFolder : File = File.applicationStorageDirectory.resolvePath("unzipFolder");
+                    var t1 : int = getTimer();
+                    var tempCtx : DefaultImplementation = new DefaultImplementation();
+                    var success : Boolean = tempCtx.call("BGT_extractZipTask", file.nativePath, unzipFolder.nativePath);
+                    var contentsStr : String = "";
+                    if (unzipFolder.exists) {
+                        var arr : Array = unzipFolder.getDirectoryListing();
+                        for each (var unzipped:File in arr) {
+                            contentsStr = contentsStr + unzipped.name + " ";
+                        }
+                    }
+                    log("unzip AS3 complete, success: " + success + " unzip folder exists: " + unzipFolder.exists +
+                            " files in unzip: " + contentsStr + " time: " + (getTimer() - t1) + " ms");
+                }
+                else {
+                    log("File does not exist!");
+                }
+            });
+            button.label = "unzip AS3";
             button.validate();
             container.addChild(button);
 

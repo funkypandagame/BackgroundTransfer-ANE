@@ -21,7 +21,7 @@ import flash.utils.ByteArray;
 import flash.utils.Dictionary;
 import flash.utils.setTimeout;
 
-internal class DefaultImplementation extends EventDispatcher {
+public class DefaultImplementation extends EventDispatcher {
 
     private var loaders : Dictionary;
 

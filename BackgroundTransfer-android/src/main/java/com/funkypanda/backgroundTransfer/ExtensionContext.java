@@ -27,7 +27,7 @@ public class ExtensionContext extends FREContext
         functionMap.put(FlashConstants.cancelDownloadTask, new CancelDownloadTaskFunction());
 
         functionMap.put(FlashConstants.saveFileTask, new SaveFileFunction());
-        functionMap.put(FlashConstants.unZipTask, new TempFunction());
+        functionMap.put(FlashConstants.unZipTask, new UnzipFileFunction());
 
         return functionMap;
     }

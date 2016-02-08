@@ -376,9 +376,9 @@ public class DownloadDispatcher extends Thread {
 				int length;
 
 				while (true) {
-					/* if the request has canceled, stop the downloading */
+					/* if the request was canceled, stop the downloading */
 					if (Thread.currentThread().isInterrupted() || request.isCanceled()) {
-						Log.i(TAG, "download has canceled, download id: " + request.getDownloadId());
+						Log.i(TAG, "download was canceled, download id: " + request.getDownloadId());
 						request.finish();
                         raf.close();
                         file.delete();

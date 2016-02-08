@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-// Unzips a file. AIR is buggy and cant save by itself reliably.
+// Unzips a file.
 public class UnzipFileFunction implements FREFunction
 {
 
@@ -37,11 +37,10 @@ public class UnzipFileFunction implements FREFunction
     }
 
     private static void unzip(File zipFile, File targetDirectory) throws IOException {
-        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)));
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
         try {
             ZipEntry ze;
-            int count;
-            byte[] buffer = new byte[8192];
+            byte[] buffer = new byte[1024];
             while ((ze = zis.getNextEntry()) != null) {
                 File file = new File(targetDirectory, ze.getName());
                 File dir = ze.isDirectory() ? file : file.getParentFile();
@@ -52,11 +51,15 @@ public class UnzipFileFunction implements FREFunction
                     continue;
                 }
                 FileOutputStream fout = new FileOutputStream(file);
+                BufferedOutputStream bufout = new BufferedOutputStream(fout);
                 try {
-                    while ((count = zis.read(buffer)) != -1) {
-                        fout.write(buffer, 0, count);
+                    int read;
+                    while ((read = zis.read(buffer)) != -1) {
+                        bufout.write(buffer, 0, read);
                     }
                 } finally {
+                    zis.closeEntry();
+                    bufout.close();
                     fout.close();
                 }
             }
