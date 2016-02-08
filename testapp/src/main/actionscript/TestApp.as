@@ -120,6 +120,7 @@ import flash.utils.getTimer;
                     currentTask.addEventListener(ErrorEvent.ERROR, function(evt:ErrorEvent):void {
                         log("DownloadTaskError " + evt.text);
                     });
+                    currentTask.resume();
                 }
                 else {
                     log("Failed to create download task!")

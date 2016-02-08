@@ -69,6 +69,7 @@ public class BackgroundTransfer extends EventDispatcher {
             _downloadTasks[task.taskID] = task;
             return task;
         }
+        dispatchEvent(new BTErrorEvent("Failed to create download task, is the " + session_id + " session initialized?"));
         return null;
     }
 
