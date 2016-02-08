@@ -110,7 +110,7 @@ import flash.utils.getTimer;
             button = new Button();
             button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
                 currentTask = service.createDownloadTask(SESSION_ID, "https://s3.amazonaws.com/rinoa-mountain/artAssets/master-723/full/PC_SD.zip",
-                                        File.applicationStorageDirectory.nativePath + "/dsfsdf.zip");
+                                        File.applicationStorageDirectory.nativePath + "/test.zip");
                 if (currentTask) {
                     currentTask.addEventListener(ProgressEvent.PROGRESS, logDownloadProgress);
                     currentTask.addEventListener(flash.events.Event.COMPLETE, function(evt:flash.events.Event):void {
@@ -171,6 +171,30 @@ import flash.utils.getTimer;
                 }
             });
             button.label = "delete file";
+            button.validate();
+            container.addChild(button);
+
+            button = new Button();
+            button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
+                var file : File = File.applicationStorageDirectory.resolvePath("test.zip");
+                if (file.exists) {
+                    var unzipFolder : File = File.applicationStorageDirectory.resolvePath("unzipFolder");
+                    var success : Boolean = service.unzipFile(file.nativePath, unzipFolder.nativePath);
+                    var contentsStr : String = "";
+                    if (unzipFolder.exists) {
+                        var arr : Array = unzipFolder.getDirectoryListing();
+                        for each (var unzipped:File in arr) {
+                            contentsStr = contentsStr + unzipped.name + " ";
+                        }
+                    }
+                    log("unzip complete, success: " + success + " unzip folder exists: " + unzipFolder.exists +
+                        " files in unzip: " + contentsStr)
+                }
+                else {
+                    log("File does not exist!");
+                }
+            });
+            button.label = "unzip downloaded";
             button.validate();
             container.addChild(button);
 

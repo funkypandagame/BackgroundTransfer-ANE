@@ -128,6 +128,9 @@ public class BackgroundTransfer extends EventDispatcher {
         if (task) {
             task.dispatchProgress(bytes_written, total_bytes);
         }
+        else {
+            dispatchEvent(new BTErrorEvent("Received progress event from unknown task " + task_id));
+        }
     }
 
     private function onDownloadTaskCompleted(task_id:String):void {
