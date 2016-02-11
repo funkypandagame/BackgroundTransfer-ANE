@@ -3,6 +3,7 @@ package com.ncreated.ane.backgroundtransfer
 
 import com.coltware.airxzipANE.ZipEntry;
 import com.coltware.airxzipANE.ZipFileReader;
+import com.ncreated.ane.backgroundtransfer.events.BTDebugEvent;
 
 import flash.events.ErrorEvent;
 import flash.events.Event;
@@ -21,7 +22,7 @@ import flash.utils.ByteArray;
 import flash.utils.Dictionary;
 import flash.utils.setTimeout;
 
-public class DefaultImplementation extends EventDispatcher {
+internal class DefaultImplementation extends EventDispatcher {
 
     private var loaders : Dictionary;
 
@@ -99,6 +100,7 @@ public class DefaultImplementation extends EventDispatcher {
             case BTNativeMethods.unZipTask:
                 if (validateParameters(rest, 2))
                 {
+                    // TODO make this async somehow
                     var zipFilePath : File = new File(rest[0]);
                     var destPath : File = new File(rest[1]);
 
@@ -125,12 +127,13 @@ public class DefaultImplementation extends EventDispatcher {
                             }
                         }
                         zipReader.close();
-                        return true;
+                        dispatchStatus("", BTInternalMessages.UNZIP_COMPLETE);
+                        return null;
                     }
                     catch (err : Error)
                     {
-                        dispatchStatus("Error unzipping file " + path + " " + err.message, BTInternalMessages.ERROR);
-                        return false;
+                        dispatchStatus("Error unzipping file " + path + " " + err.message, BTInternalMessages.UNZIP_ERROR);
+                        return null;
                     }
                 }
                 break;

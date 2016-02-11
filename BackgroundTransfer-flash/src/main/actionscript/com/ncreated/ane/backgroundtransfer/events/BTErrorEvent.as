@@ -1,4 +1,4 @@
-package com.ncreated.ane.backgroundtransfer
+package com.ncreated.ane.backgroundtransfer.events
 {
 import flash.events.Event;
 
@@ -17,6 +17,10 @@ public class BTErrorEvent extends Event
 
     public function get message():String {
         return _message;
+    }
+
+    override public function clone() : Event {
+        return new BTErrorEvent(_message);
     }
 }
 }

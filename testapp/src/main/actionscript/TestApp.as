@@ -1,14 +1,16 @@
 package
 {
 
-    import com.ncreated.ane.backgroundtransfer.BTDebugEvent;
     import com.ncreated.ane.backgroundtransfer.BTDownloadTask;
-    import com.ncreated.ane.backgroundtransfer.BTErrorEvent;
-    import com.ncreated.ane.backgroundtransfer.BTSessionInitializedEvent;
     import com.ncreated.ane.backgroundtransfer.BackgroundTransfer;
-import com.ncreated.ane.backgroundtransfer.DefaultImplementation;
+    import com.ncreated.ane.backgroundtransfer.events.BTDebugEvent;
+    import com.ncreated.ane.backgroundtransfer.events.BTErrorEvent;
+    import com.ncreated.ane.backgroundtransfer.events.BTSessionInitializedEvent;
+    import com.ncreated.ane.backgroundtransfer.events.BTUnzipCompletedEvent;
+    import com.ncreated.ane.backgroundtransfer.events.BTUnzipErrorEvent;
+    import com.ncreated.ane.backgroundtransfer.events.BTUnzipProgressEvent;
 
-import feathers.controls.Button;
+    import feathers.controls.Button;
     import feathers.controls.ScrollContainer;
     import feathers.controls.ScrollText;
     import feathers.layout.TiledColumnsLayout;
@@ -18,14 +20,14 @@ import feathers.controls.Button;
 
     import flash.events.ProgressEvent;
     import flash.filesystem.File;
-import flash.filesystem.FileMode;
-import flash.filesystem.FileStream;
+    import flash.filesystem.FileMode;
+    import flash.filesystem.FileStream;
 
-import flash.system.Capabilities;
+    import flash.system.Capabilities;
 
     import flash.text.TextFormat;
-import flash.utils.ByteArray;
-import flash.utils.getTimer;
+    import flash.utils.ByteArray;
+    import flash.utils.getTimer;
 
     import starling.display.Sprite;
     import starling.events.Event;
@@ -43,6 +45,8 @@ import flash.utils.getTimer;
         private static const SESSION_ID : String = "SESSION_ID";
 
         private var lastProgressDisplayed : Number = 0;
+
+        private var taskStart : Number;
 
         public function TestApp()
         {
@@ -147,7 +151,7 @@ import flash.utils.getTimer;
             button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
                 var file : File = File.applicationStorageDirectory.resolvePath("testFile.txt");
                 var ba : ByteArray = new ByteArray();
-                ba.writeMultiByte("some test String to write<>?£$%ÉRó", "utf-8");
+                ba.writeMultiByte("some test String to write:<>?£$%ÉRó", "utf-8");
                 var success : Boolean = service.saveFile(file.nativePath, ba);
                 log("File write success? " + success + " exists? " + file.exists);
                 if (file.exists) {
@@ -178,52 +182,12 @@ import flash.utils.getTimer;
 
             button = new Button();
             button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
+                taskStart = getTimer();
                 var file : File = File.applicationStorageDirectory.resolvePath("test.zip");
-                if (file.exists) {
-                    var unzipFolder : File = File.applicationStorageDirectory.resolvePath("unzipFolder");
-                    var t1 : int = getTimer();
-                    var success : Boolean = service.unzipFile(file.nativePath, unzipFolder.nativePath);
-                    var contentsStr : String = "";
-                    if (unzipFolder.exists) {
-                        var arr : Array = unzipFolder.getDirectoryListing();
-                        for each (var unzipped:File in arr) {
-                            contentsStr = contentsStr + unzipped.name + " ";
-                        }
-                    }
-                    log("unzip native complete, success: " + success + " unzip folder exists: " + unzipFolder.exists +
-                        " files in unzip: " + contentsStr + " time: " + (getTimer() - t1) + " ms");
-                }
-                else {
-                    log("File does not exist!");
-                }
+                var unzipFolder : File = File.applicationStorageDirectory.resolvePath("unzipFolder");
+                service.unzipFile(file.nativePath, unzipFolder.nativePath);
             });
-            button.label = "unzip native";
-            button.validate();
-            container.addChild(button);
-
-            button = new Button();
-            button.addEventListener(Event.TRIGGERED, function (evt : Event) : void {
-                var file : File = File.applicationStorageDirectory.resolvePath("test.zip");
-                if (file.exists) {
-                    var unzipFolder : File = File.applicationStorageDirectory.resolvePath("unzipFolder");
-                    var t1 : int = getTimer();
-                    var tempCtx : DefaultImplementation = new DefaultImplementation();
-                    var success : Boolean = tempCtx.call("BGT_extractZipTask", file.nativePath, unzipFolder.nativePath);
-                    var contentsStr : String = "";
-                    if (unzipFolder.exists) {
-                        var arr : Array = unzipFolder.getDirectoryListing();
-                        for each (var unzipped:File in arr) {
-                            contentsStr = contentsStr + unzipped.name + " ";
-                        }
-                    }
-                    log("unzip AS3 complete, success: " + success + " unzip folder exists: " + unzipFolder.exists +
-                            " files in unzip: " + contentsStr + " time: " + (getTimer() - t1) + " ms");
-                }
-                else {
-                    log("File does not exist!");
-                }
-            });
-            button.label = "unzip AS3";
+            button.label = "unzip downloaded";
             button.validate();
             container.addChild(button);
 
@@ -259,6 +223,18 @@ import flash.utils.getTimer;
             });
             service.addEventListener(BTErrorEvent.TYPE, function (evt : BTErrorEvent) : void {
                 log("ERROR " + evt.message);
+            });
+            service.addEventListener(BTUnzipCompletedEvent.TYPE, function (evt : BTUnzipCompletedEvent) : void {
+                var unzipFolder : File = File.applicationStorageDirectory.resolvePath("unzipFolder");
+                log("UNZIP COMPLETE, unzip folder exists: " + unzipFolder.exists +
+                        " time:" + (getTimer() - taskStart) + "ms");
+
+            });
+            service.addEventListener(BTUnzipProgressEvent.TYPE, function (evt : BTUnzipProgressEvent) : void {
+                log("UNZIP PROGRESS " + evt.progress);
+            });
+            service.addEventListener(BTUnzipErrorEvent.TYPE, function (evt : BTUnzipErrorEvent) : void {
+                log("UNZIP ERROR " + evt.message);
             });
         }
 

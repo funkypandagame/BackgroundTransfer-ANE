@@ -1,4 +1,4 @@
-package com.ncreated.ane.backgroundtransfer {
+package com.ncreated.ane.backgroundtransfer.events {
 import flash.events.Event;
 
 /**
@@ -24,6 +24,10 @@ public class BTSessionInitializedEvent extends Event {
 
     public function get runningTasks():Array {
         return _runningTasks;
+    }
+
+    override public function clone() : Event {
+        return new BTSessionInitializedEvent(_sessionID, _runningTasks);
     }
 }
 }

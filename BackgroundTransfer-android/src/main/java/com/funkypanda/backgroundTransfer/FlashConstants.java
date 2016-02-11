@@ -11,6 +11,10 @@ public class FlashConstants {
     final public static String DEBUG_LOG = "debug log";
     final public static String ERROR = "bt error";
 
+    final public static String UNZIP_COMPLETE = "unzip complete";
+    final public static String UNZIP_PROGRESS = "unzip progress";
+    final public static String UNZIP_ERROR = "unzip error";
+
     // function names
     final public static String initializeSession = "BGT_initializeSession";
     final public static String createDownloadTask = "BGT_createDownloadTask";

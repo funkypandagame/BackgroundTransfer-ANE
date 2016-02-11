@@ -1,14 +1,15 @@
 package com.funkypanda.backgroundTransfer.functions;
 
+import android.os.AsyncTask;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 import com.funkypanda.backgroundTransfer.ANEUtils;
 import com.funkypanda.backgroundTransfer.Extension;
-
-import java.io.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import com.funkypanda.backgroundTransfer.FlashConstants;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.progress.ProgressMonitor;
 
 // Unzips a file.
 public class UnzipFileFunction implements FREFunction
@@ -18,53 +19,58 @@ public class UnzipFileFunction implements FREFunction
     public FREObject call(FREContext ctx, FREObject[] args)
     {
         if (args.length != 2) {
-            Extension.logError("UnzipFileFunction: Called with " + args.length + " args, needs 2");
-            return ANEUtils.booleanAsFREObject(false);
+            Extension.dispatchStatusEventAsync(FlashConstants.UNZIP_ERROR, "UnzipFileFunction: Called with " + args.length + " args, needs 2");
+            return null;
         }
         String pathToZip = ANEUtils.getStringFromFREObject(args[0]);
         String destPath = ANEUtils.getStringFromFREObject(args[1]);
-
-        try
-        {
-            unzip(new File(pathToZip), new File(destPath));
-        }
-        catch(IOException e)
-        {
-            Extension.logError("Failed to unzip " + pathToZip + " " + e.toString() );
-            return ANEUtils.booleanAsFREObject(false);
-        }
-        return  ANEUtils.booleanAsFREObject(true);
+        new ExtractTask().execute(pathToZip, destPath);
+        return null;
     }
 
-    private static void unzip(File zipFile, File targetDirectory) throws IOException {
-        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
-        try {
-            ZipEntry ze;
-            byte[] buffer = new byte[1024];
-            while ((ze = zis.getNextEntry()) != null) {
-                File file = new File(targetDirectory, ze.getName());
-                File dir = ze.isDirectory() ? file : file.getParentFile();
-                if (!dir.isDirectory() && !dir.mkdirs()) {
-                    throw new FileNotFoundException("Failed to ensure directory: " + dir.getAbsolutePath());
-                }
-                if (ze.isDirectory()) {
-                    continue;
-                }
-                FileOutputStream fout = new FileOutputStream(file);
-                BufferedOutputStream bufout = new BufferedOutputStream(fout);
-                try {
-                    int read;
-                    while ((read = zis.read(buffer)) != -1) {
-                        bufout.write(buffer, 0, read);
+    private class ExtractTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String pathToZip = params[0];
+            String destPath = params[1];
+
+            try
+            {
+                ZipFile zipFile = new ZipFile(pathToZip);
+                ProgressMonitor pm = zipFile.getProgressMonitor();
+                zipFile.setRunInThread(true);
+                zipFile.extractAll(destPath);
+                while (pm.getPercentDone() < 100)
+                {
+                    publishProgress(pm.getPercentDone());
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        zipFile.getProgressMonitor().cancelAllTasks();
+                        return "Failed to unzip " + pathToZip + " " + e.toString();
                     }
-                } finally {
-                    zis.closeEntry();
-                    bufout.close();
-                    fout.close();
                 }
             }
-        } finally {
-            zis.close();
+            catch (ZipException e) {
+                return "Failed to unzip " + pathToZip + " " + e.toString();
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("")) {
+                Extension.dispatchStatusEventAsync(FlashConstants.UNZIP_COMPLETE, "");
+            }
+            else {
+                Extension.dispatchStatusEventAsync(FlashConstants.UNZIP_ERROR, result);
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            Extension.dispatchStatusEventAsync(FlashConstants.UNZIP_PROGRESS, values[0].toString());
         }
     }
 

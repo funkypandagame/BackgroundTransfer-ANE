@@ -1,5 +1,12 @@
 package com.ncreated.ane.backgroundtransfer {
 
+import com.ncreated.ane.backgroundtransfer.events.BTDebugEvent;
+import com.ncreated.ane.backgroundtransfer.events.BTErrorEvent;
+import com.ncreated.ane.backgroundtransfer.events.BTSessionInitializedEvent;
+import com.ncreated.ane.backgroundtransfer.events.BTUnzipCompletedEvent;
+import com.ncreated.ane.backgroundtransfer.events.BTUnzipErrorEvent;
+import com.ncreated.ane.backgroundtransfer.events.BTUnzipProgressEvent;
+
 import flash.events.EventDispatcher;
 import flash.events.StatusEvent;
 import flash.external.ExtensionContext;
@@ -77,14 +84,16 @@ public class BackgroundTransfer extends EventDispatcher {
         return _extensionContext.call(BTNativeMethods.saveFileTask, local_path, fileData);
     }
 
-    public function unzipFile(zipFilePath:String, destPath:String):Boolean {
-        var zipFile : File = new File(zipFilePath);
-        if (!zipFile.exists)
-        {
-            dispatchEvent(new BTErrorEvent("Zip file does not exist " + zipFile.nativePath));
-            return false;
+    public function unzipFile(zipFilePath:String, destPath:String):void {
+        if (zipFilePath == null || destPath == null) {
+            dispatchEvent(new BTUnzipErrorEvent("unzipFile(): zipFilePath or destPath is null"));
+            return;
         }
-        return _extensionContext.call(BTNativeMethods.unZipTask, zipFilePath, destPath);
+        var zipFile : File = new File(zipFilePath);
+        if (!zipFile.exists) {
+            dispatchEvent(new BTUnzipErrorEvent("Zip file does not exist " + zipFile.nativePath));
+        }
+        _extensionContext.call(BTNativeMethods.unZipTask, zipFilePath, destPath);
     }
 
     public function isSessionInitialized(session_id:String):Boolean {
@@ -193,6 +202,21 @@ public class BackgroundTransfer extends EventDispatcher {
                 taskID = unescape(data.shift());
                 var error:String = data.join(" ");
                 onDownloadTaskError(taskID, error);
+                break;
+            }
+            case BTInternalMessages.UNZIP_PROGRESS:
+            {
+                dispatchEvent(new BTUnzipProgressEvent(parseInt(event.code)));
+                break;
+            }
+            case BTInternalMessages.UNZIP_COMPLETE:
+            {
+                dispatchEvent(new BTUnzipCompletedEvent());
+                break;
+            }
+            case BTInternalMessages.UNZIP_ERROR:
+            {
+                dispatchEvent(new BTUnzipErrorEvent(event.code));
                 break;
             }
             case BTInternalMessages.DEBUG_LOG:
