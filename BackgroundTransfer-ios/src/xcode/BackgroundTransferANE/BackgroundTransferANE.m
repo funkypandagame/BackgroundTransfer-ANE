@@ -185,20 +185,28 @@ FREObject BGT_extractZipTask(FREContext context, void* functionData, uint32_t ar
         NSString *zipFilePathStr = [NSString stringWithUTF8String:(char*)zipFilePath];
         NSString *destPathStr = [NSString stringWithUTF8String:(char*)destPath];
         
-        __block int progress = -1;
-        
-        [SSZipArchive unzipFileAtPath:zipFilePathStr toDestination:destPathStr progressHandler:^(NSString *entry, unz_file_info zipInfo, long entryNumber, long total) {
-            int progr = (int)(100 * entryNumber / total);
-            if (progress != progr) {
-                NSLog(@"progress %d", progr);
-                progress = progr;
-                NSString *progStr = @(progr).stringValue;
-                FREDispatchStatusEventAsync(context, [progStr ANEString], [kUnzipProgress ANEString]);
-            }
-        } completionHandler:^(NSString *path, BOOL succeeded, NSError *error) {
-            const uint8_t result[] = "";
-            FREDispatchStatusEventAsync(context, result, [kUnzipCompleted ANEString]);
-        }];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            __block int progress = -1;
+            __block NSDate *firstTime = [NSDate date];
+            
+            [SSZipArchive unzipFileAtPath:zipFilePathStr toDestination:destPathStr progressHandler:^(NSString *entry, unz_file_info zipInfo, long entryNumber, long total) {
+                
+                double offset = [[NSDate date] timeIntervalSinceDate:firstTime];
+                
+                int progr = (int)(100 * entryNumber / total);
+                if (progress != progr && offset > 0.2) {
+                    firstTime = [NSDate date];
+                    progress = progr;
+                    NSString *progStr = @(progr).stringValue;
+                    FREDispatchStatusEventAsync(context, [progStr ANEString], [kUnzipProgress ANEString]);
+                }
+            } completionHandler:^(NSString *path, BOOL succeeded, NSError *error) {
+                const uint8_t result[] = "";
+                FREDispatchStatusEventAsync(context, result, [kUnzipCompleted ANEString]);
+            }];
+            
+        });
+
     }
     return NULL;
 }
