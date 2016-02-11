@@ -179,19 +179,28 @@ FREObject BGT_extractZipTask(FREContext context, void* functionData, uint32_t ar
     const uint8_t *zipFilePath = NULL;
     const uint8_t *destPath = NULL;
     
-    uint32_t unzipSuccess = false;
-    
     if (FREGetObjectAsUTF8(argv[0], &length, &zipFilePath) == FRE_OK &&
         FREGetObjectAsUTF8(argv[1], &length, &destPath) == FRE_OK) {
         
         NSString *zipFilePathStr = [NSString stringWithUTF8String:(char*)zipFilePath];
         NSString *destPathStr = [NSString stringWithUTF8String:(char*)destPath];
         
-        unzipSuccess = [SSZipArchive unzipFileAtPath:zipFilePathStr toDestination: destPathStr];
+        __block int progress = -1;
+        
+        [SSZipArchive unzipFileAtPath:zipFilePathStr toDestination:destPathStr progressHandler:^(NSString *entry, unz_file_info zipInfo, long entryNumber, long total) {
+            int progr = (int)(100 * entryNumber / total);
+            if (progress != progr) {
+                NSLog(@"progress %d", progr);
+                progress = progr;
+                NSString *progStr = @(progr).stringValue;
+                FREDispatchStatusEventAsync(context, [progStr ANEString], [kUnzipProgress ANEString]);
+            }
+        } completionHandler:^(NSString *path, BOOL succeeded, NSError *error) {
+            const uint8_t result[] = "";
+            FREDispatchStatusEventAsync(context, result, [kUnzipCompleted ANEString]);
+        }];
     }
-    FREObject retBool = nil;
-    FRENewObjectFromBool(unzipSuccess, &retBool);
-    return retBool;
+    return NULL;
 }
 
 

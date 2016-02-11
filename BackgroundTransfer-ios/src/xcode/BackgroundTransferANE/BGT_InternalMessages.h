@@ -13,4 +13,9 @@ NSString * const kDownloadTaskProgress = @"download task progress";
 NSString * const kDownloadTaskCompleted = @"download task completed";
 NSString * const kDownloadTaskError = @"download task error";
 
+NSString * const kUnzipCompleted = @"unzip complete";
+NSString * const kUnzipProgress = @"unzip progress";
+NSString * const kUnzipError = @"unzip error";
+
+
 #endif
