@@ -81,6 +81,11 @@ public class BackgroundTransfer extends EventDispatcher {
     }
 
     public function saveFile(local_path:String, fileData:ByteArray):Boolean {
+
+        if (local_path == null || fileData == null) {
+            dispatchEvent(new BTErrorEvent("saveFile(): local_path or fileData is null"));
+            return false;
+        }
         return _extensionContext.call(BTNativeMethods.saveFileTask, local_path, fileData);
     }
 

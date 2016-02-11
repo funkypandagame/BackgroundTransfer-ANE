@@ -16,9 +16,24 @@ public class Extension implements FREExtension
 
     public static DownloadManager downloadManager;
 
+    public static void dispatchStatusEventAsync(String eventCode, String message, boolean log)
+    {
+        if (context != null) {
+            if (log) {
+                Log.d(TAG, eventCode + " " + message);
+            }
+            context.dispatchStatusEventAsync(message, eventCode);
+        }
+        else {
+            Log.e(TAG, "Extension context is null, was the extension disposed? Tried to send event " +
+                    eventCode + " with message " + message);
+        }
+    }
+
     public static void dispatchStatusEventAsync(String eventCode, String message)
     {
         if (context != null) {
+            Log.d(TAG, eventCode + " " + message);
             context.dispatchStatusEventAsync(message, eventCode);
         }
         else {

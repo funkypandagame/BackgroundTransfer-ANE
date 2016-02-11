@@ -56,7 +56,7 @@ public class CreateDownloadTaskFunction implements FREFunction
                     @Override
                     public void onProgress(int downloadId, long downloadedBytes, long totalBytes) {
                         String toReturn = getTaskId() + " " + downloadedBytes + " " + totalBytes;
-                        Extension.dispatchStatusEventAsync(FlashConstants.DOWNLOAD_TASK_PROGRESS, toReturn);
+                        Extension.dispatchStatusEventAsync(FlashConstants.DOWNLOAD_TASK_PROGRESS, toReturn, false);
                     }
 
                     @Override

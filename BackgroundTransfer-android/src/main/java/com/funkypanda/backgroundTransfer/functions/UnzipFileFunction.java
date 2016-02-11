@@ -41,14 +41,26 @@ public class UnzipFileFunction implements FREFunction
                 ProgressMonitor pm = zipFile.getProgressMonitor();
                 zipFile.setRunInThread(true);
                 zipFile.extractAll(destPath);
-                while (pm.getPercentDone() < 100)
+                int prevPercent = -1;
+                while (pm.getState() == ProgressMonitor.STATE_BUSY)
                 {
-                    publishProgress(pm.getPercentDone());
+                    int currDone = pm.getPercentDone();
+                    if (prevPercent != currDone) {
+                        prevPercent = currDone;
+                        Extension.dispatchStatusEventAsync(FlashConstants.UNZIP_PROGRESS, currDone + "");
+                    }
                     try {
                         Thread.sleep(200);
                     } catch (InterruptedException e) {
                         zipFile.getProgressMonitor().cancelAllTasks();
                         return "Failed to unzip " + pathToZip + " " + e.toString();
+                    }
+                }
+                if (pm.getResult() == ProgressMonitor.RESULT_ERROR) {
+                    if (pm.getException() != null) {
+                        return ("An unzip error occurred " + pm.getException().toString());
+                    } else {
+                        return ("An unzip error occurred");
                     }
                 }
             }
@@ -68,10 +80,6 @@ public class UnzipFileFunction implements FREFunction
             }
         }
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            Extension.dispatchStatusEventAsync(FlashConstants.UNZIP_PROGRESS, values[0].toString());
-        }
     }
 
 }
